@@ -1,0 +1,6 @@
+*.fla
+.DS_Store
+.project
+.settings
+bin/FlexUnitCIRunner.swf
+bin/TimelineWrapperSuite.swf
