@@ -1,0 +1,36 @@
+<project name="Juice" default="compile juice swc">
+  <property file="build.properties" />
+	
+  <target name="compile juice swc" depends="init">
+    <fdt.loadProjectProperties projectname="percentjuice_as3utils" />
+    <fdt.launch.library projectname="${FDTProject}"
+    	compilerarguments="-target-player={playerVersion} 
+    	--include-sources+=/Users/chad/Sites/Eclipse/workspaces/percentjuice_as3utils/src 
+    	--compiler.source-path+=/Users/chad/Sites/externalLibraries/hamcrest-as3/hamcrest/src,/Users/chad/Sites/Eclipse/workspaces/percentjuice_as3utils/src,/Users/chad/Sites/externalLibraries/as3-signals/src,/Users/chad/Sites/Eclipse/workspaces/percentjuice_as3utils/src_test,/Users/chad/Sites/externalLibraries/as3-signals-utilities-async/src,/Users/chad/Sites/externalLibraries/mockito-1.4M5"
+    	target="${DEPLOY_DIR}/percentjuice_as3utils.swc" 
+	  	autoaddclasspath="false"
+  	  	autoaddswcs="false"
+		debug="false"
+   />
+  	
+  </target>
+	<target name="TimelineWrapper (tests)">
+	    <fdt.loadProjectProperties projectname="percentjuice_as3utils" />
+	    <fdt.launch.application projectname="${FDTProject}" 
+	    	mainclass="${TEST_DIR}/FlexUnitUIRunner.mxml" 
+	    	compilerarguments="-static-link-runtime-shared-libraries=true
+	    	-target-player=${FDTProjectPlayerVersion} 
+	    	-library-path+='${FDTProjectSdkPath}/frameworks/locale/en_US' 
+	    	-default-size=1300,800" 
+	    	target="${FDTProjectPath}/bin/TimelineWrapperSuite.swf" 
+	    	debug="true" startswf="true" swflauncher="External SWF Viewer" swflocation="bin/TimelineWrapperSuite.swf" height="800" width="1300" />
+	</target>
+	
+	
+   <!-- delete and create the DEPLOY dir again -->
+   <target name="init">
+      <delete dir="${DEPLOY_DIR}" />
+      <mkdir dir="${DEPLOY_DIR}" />       
+   </target>	
+
+</project>

@@ -1,6 +1,6 @@
 AS3 UTILS
 http://github.com/percentjuice/as3utils
-common actionscript tasks made simple.
+common actionscript chores made simple.
 
 INSTALLATION
 This is an AS3 library, a compiled swc is included.  See LIBARARIES below for referenced libraries.  
@@ -12,6 +12,8 @@ Hamcrest-AS3
 https://github.com/drewbourne/hamcrest-as3
 AS3-Signals Utilities-Async
 https://github.com/eidiot/as3-signals-utilities-async
+Mockito_Flex
+https://bitbucket.org/loomis/mockito-flex/wiki/Home
 
 LICENSE
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
