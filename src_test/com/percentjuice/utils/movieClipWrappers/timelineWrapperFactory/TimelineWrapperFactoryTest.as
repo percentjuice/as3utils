@@ -1,6 +1,11 @@
-package com.percentjuice.utils.movieClipWrappers
+package com.percentjuice.utils.movieClipWrappers.timelineWrapperFactory
 {
-	import com.percentjuice.utils.movieClipWrappers.timelineWrapperFactory.TimelineWrapperFactory;
+	import com.percentjuice.utils.movieClipWrappers.ITimelineWrapper;
+	import com.percentjuice.utils.movieClipWrappers.TimelineWrapper;
+	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperAssertions;
+	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperQueue;
+	import com.percentjuice.utils.movieClipWrappers.support.MCLoader;
+	import com.percentjuice.utils.movieClipWrappers.support.MCProperties;
 
 	import org.hamcrest.assertThat;
 	import org.hamcrest.core.allOf;
@@ -9,12 +14,37 @@ package com.percentjuice.utils.movieClipWrappers
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasPropertyWithValue;
 	import org.hamcrest.object.instanceOf;
+	import org.osflash.signals.utils.SignalAsyncEvent;
+	import org.osflash.signals.utils.handleSignal;
 
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 
 	public class TimelineWrapperFactoryTest
-	{		
+	{
+		private static var mcWithLabelsLoader:MCLoader;
+		private static var mcWithLabels:MovieClip;
+
+		private static var propsForLabelsTest:MCProperties;
+		private static var propsForNoLabelsTest:MCProperties;
+
+		[BeforeClass(async)]
+		public static function setUpBeforeClass():void
+		{
+			propsForLabelsTest = MCProperties.mcWithLabels;
+			propsForNoLabelsTest = MCProperties.mcWithoutLabels;
+
+			mcWithLabelsLoader = new MCLoader();
+			mcWithLabelsLoader.load(propsForLabelsTest);
+			handleSignal(TimelineWrapperFactoryTest, mcWithLabelsLoader.signal_loadComplete, TimelineWrapperFactoryTest.handleLoadComplete, 3000, null);
+		}
+
+		private static function handleLoadComplete(event:SignalAsyncEvent, none:*):void
+		{
+			mcWithLabels = event.args[1];
+			mcWithLabelsLoader = null;
+		}
+
 		[Test]
 		public function getOneTimelineWrapperPerMC_should_return_identical_timelineWrapper_for_identical_movieClip():void
 		{
@@ -73,9 +103,8 @@ package com.percentjuice.utils.movieClipWrappers
 
 		private function should_show_self_destroying_functionality(selfDestroying:ITimelineWrapper):void
 		{
-			selfDestroying.signal_reachedStop.dispatchSignalClone("request");
+			selfDestroying.reachedStop.dispatchSignalClone("request");
 			assertThat(selfDestroying.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", TimelineWrapperAssertions.ATTEMPTED_ACCESS_OF_DESTROYED_INSTANCE))));
 		}
 	}
 }
-

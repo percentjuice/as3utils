@@ -1,9 +1,6 @@
-// ------------------------------------------------------------------------------
-// copyright 2010
-// ------------------------------------------------------------------------------
-
 package com.percentjuice.utils.movieClipWrappers
 {
+	import flash.errors.IllegalOperationError;
 	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -14,9 +11,8 @@ package com.percentjuice.utils.movieClipWrappers
 	 */
 	public class TimelineWrapper implements ITimelineWrapper
 	{
-
 		private var _isPlaying:Boolean;
-		private var _signal_reachedStop:TimelineWrapperSignal;
+		private var _reachedStop:TimelineWrapperSignal;
 
 		private var _wrappedMC:MovieClip;
 		private var startRequest:Object;
@@ -25,8 +21,8 @@ package com.percentjuice.utils.movieClipWrappers
 		private var timelineWrapperAssertions:TimelineWrapperAssertions;
 
 		/**
-		 * @param labeledMC: a movieClip with labels/frames you will
-		 * 	* reference as animation start/stop points
+		 * @param wrappedMC: a movieClip with labels||frames you will
+		 * 	* reference for animation start and stop points
 		 */
 		public function TimelineWrapper(wrappedMC:MovieClip)
 		{
@@ -37,50 +33,92 @@ package com.percentjuice.utils.movieClipWrappers
 		private function init():void
 		{
 			timelineWrapperAssertions = new TimelineWrapperAssertions();
-			timelineWrapperAssertions.assertWrappedMCNotNull(wrappedMC);
-
-			_signal_reachedStop = new TimelineWrapperSignal(this);
+			timelineWrapperAssertions.assertWrappedMCNotNull(_wrappedMC);
 
 			_wrappedMC.stop();
+
+			_reachedStop = new TimelineWrapperSignal(this);
 		}
 
-		public function destroy():void
+		public function play():void// TODO: requires test
 		{
-			if (timelineWrapperAssertions.isInstanceDestroyed(this))
-			{
-				trace("ITimelineWrapper::destroy() called on already destroyed ITimelineWrapper.");
-			}
-			else
-			{
-				stop();
-				_signal_reachedStop.removeAll();
-				_signal_reachedStop = null;
-			}
+			gotoAndPlayUntilNextLabelOrStop(currentFrame, totalFrames, null);
 		}
 
-		public function gotoAndStop(frame:Object, scene:String = null):void
+		public function gotoAndPlay(frame:Object, scene:String = null):void//TODO: requires test
 		{
-			timelineWrapperAssertions.assertInstanceIsNotDestroyed(this);
-			stop();
-			wrappedMC.gotoAndStop(frame, scene);
+			gotoAndPlayUntilNextLabelOrStop(frame, totalFrames, scene);
 		}
 
 		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void
 		{
-			timelineWrapperAssertions.assertInstanceIsNotDestroyed(this);
-			gotoAndPlayUntilNextLabelOrStop(frame, null, scene);
+			gotoAndPlayUntilNextLabelOrStop(frame, getFrameBeforeNextLabelOrLastFrame(frame), scene);
 		}
 
-		/* kicks off start label/frame & end label/frame */
 		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
 		{
-			timelineWrapperAssertions.assertInstanceIsNotDestroyed(this);
-			gotoAndPlayUntilNextLabelOrStop(frame, stopOn, scene);
+			if (stopOn is String)
+			{
+				stopOn = getFrameBeforeNextLabel(stopOn as String);
+			}
+
+			gotoAndPlayUntilNextLabelOrStop(frame, stopOn as int, scene);
 		}
 
-		/* kicks off start label/frame & end label/frame */
-		private function gotoAndPlayUntilNextLabelOrStop(frame:Object, stopOn:Object = null, scene:String = null):void
+		private function getFrameBeforeNextLabelOrLastFrame(frame:Object):int
 		{
+			var l:int = wrappedMC.currentLabels.length - 1;
+
+			if (wrappedMC.currentLabels.length == 0 || (String(frame) == (wrappedMC.currentLabels[l] as FrameLabel).name) || (int(frame) > 0 && (wrappedMC.currentLabels[l] as FrameLabel).frame <= frame))
+			{
+				return totalFrames;
+			}
+			else
+			{
+				if (int(frame) > 0)
+					frame = getLabelForFrame(int(frame));
+
+				if (String(frame) == null)
+					throw new IllegalOperationError("Not a settable Frame: '" + frame + "'");
+
+				return getFrameBeforeNextLabel(String(frame));
+			}
+		}
+
+		private function getLabelForFrame(frame:int):String
+		{
+			for (var l:int = wrappedMC.currentLabels.length - 1; l != -1; l--)
+			{
+				var fl:FrameLabel = wrappedMC.currentLabels[l];
+				if (fl.frame <= frame)
+				{
+					return FrameLabel(wrappedMC.currentLabels[l]).name;
+				}
+			}
+			throw new Error('Frame "' + frame + '" not found in ' + wrappedMC);
+		}
+
+		private function getFrameBeforeNextLabel(label:String):int
+		{
+			var l:int = wrappedMC.currentLabels.length;
+
+			for (var i:int = 0; i < l; i++)
+			{
+				var fl:FrameLabel = wrappedMC.currentLabels[i];
+				if (fl.name == label)
+				{
+					var nextLabel:FrameLabel = FrameLabel(wrappedMC.currentLabels[i + 1]);
+					return nextLabel.frame - 1;
+				}
+			}
+			throw new Error('Label "' + label + '" not found in ' + wrappedMC);
+		}
+
+		/* kicks off start label || frame & end label || frame */
+		private function gotoAndPlayUntilNextLabelOrStop(frame:Object, stopOn:int, scene:String = null):void
+		{
+			timelineWrapperAssertions.assertInstanceIsNotDestroyed(this);
+
 			startRequest = frame;
 			timelineWrapperAssertions.assertRequestIsNotNumberAsString([frame, stopOn]);
 
@@ -95,57 +133,30 @@ package com.percentjuice.utils.movieClipWrappers
 
 			wrappedMC.gotoAndStop(frame, scene);
 
-			if (stopOn && stopOn is String)
+			if (stopOn > 0)
 			{
-				setStopOnBeforeNextLabel(stopOn as String);
-			}
-			else if (stopOn && int(stopOn) > 0)
-			{
-				stopOnFrame = int(stopOn);
+				stopOnFrame = stopOn;
 			}
 			else
 			{
-				setStopOnBeforeNextLabelOrAtEnd();
+				throw new IllegalOperationError("Not a settable Stop Frame: " + stopOn);
 			}
 
 			wrappedMC.addEventListener(Event.ENTER_FRAME, handleOnEnterFrame);
+		}
+
+		public function gotoAndStop(frame:Object, scene:String = null):void
+		{
+			timelineWrapperAssertions.assertInstanceIsNotDestroyed(this);
+			
+			stop();
+			wrappedMC.gotoAndStop(frame, scene);
 		}
 
 		public function stop():void
 		{
 			clearCurrentAction();
 			wrappedMC.stop();
-		}
-
-		private function setStopOnBeforeNextLabel(label:String):void
-		{
-			var l:int = wrappedMC.currentLabels.length;
-
-			for (var i:int = 0; i < l; i++)
-			{
-				var fl:FrameLabel = wrappedMC.currentLabels[i];
-				if (fl.name == label)
-				{
-					var nextLabel:FrameLabel = FrameLabel(wrappedMC.currentLabels[i + 1]);
-					stopOnFrame = nextLabel.frame - 1;
-					return;
-				}
-			}
-			throw new Error('Label ' + label + ' not found in ' + wrappedMC);
-		}
-
-		private function setStopOnBeforeNextLabelOrAtEnd():void
-		{
-			var l:int = wrappedMC.currentLabels.length - 1;
-
-			if (wrappedMC.currentLabels.length == 0 || wrappedMC.currentLabel == (wrappedMC.currentLabels[l] as FrameLabel).name)
-			{
-				stopOnFrame = totalFrames;
-			}
-			else
-			{
-				setStopOnBeforeNextLabel(wrappedMC.currentLabel);
-			}
 		}
 
 		private function clearCurrentAction():void
@@ -174,19 +185,26 @@ package com.percentjuice.utils.movieClipWrappers
 		{
 			clearCurrentAction();
 
-			if (timelineWrapperAssertions.isInstanceDestroyed(this))// TODO: remove unecessary check
+			reachedStop.dispatchSignalClone(startRequest);
+		}
+
+		public function destroy():void
+		{
+			if (timelineWrapperAssertions.isInstanceDestroyed(this))
 			{
-				trace("Error with TimelineWrapperFactory use.  Dispatch request on destroyed TimelineWrapper.");
+				trace("TimelineWrapper::destroy() called on already destroyed object.");
 			}
 			else
 			{
-				signal_reachedStop.dispatchSignalClone(startRequest);
+				stop();
+				_reachedStop.removeAll();
+				_reachedStop = null;
 			}
 		}
 
-		public function get signal_reachedStop():TimelineWrapperSignal
+		public function get reachedStop():TimelineWrapperSignal
 		{
-			return _signal_reachedStop;
+			return _reachedStop;
 		}
 
 		public function get isPlaying():Boolean

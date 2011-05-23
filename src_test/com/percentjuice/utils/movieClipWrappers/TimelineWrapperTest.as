@@ -1,15 +1,20 @@
 package com.percentjuice.utils.movieClipWrappers
 {
+	import com.percentjuice.utils.movieClipWrappers.support.MCLoader;
+	import com.percentjuice.utils.movieClipWrappers.support.MCProperties;
+
 	import org.hamcrest.assertThat;
 	import org.hamcrest.core.allOf;
 	import org.hamcrest.core.throws;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasPropertyWithValue;
 	import org.hamcrest.object.instanceOf;
-	import org.osflash.signals.utils.*;
+	import org.osflash.signals.utils.SignalAsyncEvent;
+	import org.osflash.signals.utils.handleSignal;
 
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
+
 
 	public class TimelineWrapperTest
 	{
@@ -49,7 +54,7 @@ package com.percentjuice.utils.movieClipWrappers
 		public function should_play_from_label_through_to_next():void
 		{
 			var timelineWrapperForLabelsTest:TimelineWrapper = new TimelineWrapper(mcWithLabels);
-			handleSignal(this, timelineWrapperForLabelsTest.signal_reachedStop, handleLabelReached, 1000);
+			handleSignal(this, timelineWrapperForLabelsTest.reachedStop, handleLabelReached, 1000);
 			timelineWrapperForLabelsTest.gotoAndPlayUntilNextLabel(2);
 		}
 
@@ -69,7 +74,7 @@ package com.percentjuice.utils.movieClipWrappers
 		public function should_play_from_frame_through_to_end():void
 		{
 			var timelineWrapperForNoLabelsTest:TimelineWrapper = new TimelineWrapper(mcWithoutLabels);
-			handleSignal(this, timelineWrapperForNoLabelsTest.signal_reachedStop, handleEndReached, 3000);
+			handleSignal(this, timelineWrapperForNoLabelsTest.reachedStop, handleEndReached, 3000);
 			timelineWrapperForNoLabelsTest.gotoAndPlayUntilNextLabel(1);
 		}
 
@@ -77,7 +82,7 @@ package com.percentjuice.utils.movieClipWrappers
 		public function should_play_from_label_through_to_end():void
 		{
 			var timelineWrapperForLabelsTest:TimelineWrapper = new TimelineWrapper(mcWithLabels);
-			handleSignal(this, timelineWrapperForLabelsTest.signal_reachedStop, handleEndReached, 3000);
+			handleSignal(this, timelineWrapperForLabelsTest.reachedStop, handleEndReached, 3000);
 			timelineWrapperForLabelsTest.gotoAndPlayUntilNextLabel('label3');
 		}
 

@@ -17,17 +17,17 @@ package com.percentjuice.utils.movieClipWrappers.timelineWrapperFactory
 
 		internal function addTimelineWrapperSignalHandler(timelineWrapper:ITimelineWrapper):void
 		{
-			timelineWrapper.signal_reachedStop.addOnce(createCollectionRemovalFunction(timelineWrapper, timelineWrappers));
+			timelineWrapper.reachedStop.addOnce(createCollectionRemovalFunction(timelineWrapper, timelineWrappers));
 			
-			timelineWrapper.signal_reachedStop.addOnce(handleITimelineWrapperDestroy);
+			timelineWrapper.reachedStop.addOnce(handleITimelineWrapperDestroy);
 		}
 
 		internal function addTimelineWrapperQueueSignalHandler(timelineWrapper:ITimelineWrapper, timelineWrapperQueue:ITimelineWrapper):void
 		{
-			timelineWrapper.signal_reachedStop.addOnce(createCollectionRemovalFunction(timelineWrapper, timelineWrappers));
-			(timelineWrapperQueue as TimelineWrapperQueue).signal_queueComplete.addOnce(createCollectionRemovalFunction(timelineWrapperQueue, timelineWrapperQueues));
+			timelineWrapper.reachedStop.addOnce(createCollectionRemovalFunction(timelineWrapper, timelineWrappers));
+			(timelineWrapperQueue as TimelineWrapperQueue).queueComplete.addOnce(createCollectionRemovalFunction(timelineWrapperQueue, timelineWrapperQueues));
 			
-			(timelineWrapperQueue as TimelineWrapperQueue).signal_queueComplete.addOnce(handleITimelineWrapperDestroy);
+			(timelineWrapperQueue as TimelineWrapperQueue).queueComplete.addOnce(handleITimelineWrapperDestroy);
 		}
 
 		private function createCollectionRemovalFunction(iTimelineWrapper:ITimelineWrapper, returnTypeCollection:Vector.<ITimelineWrapper>):Function

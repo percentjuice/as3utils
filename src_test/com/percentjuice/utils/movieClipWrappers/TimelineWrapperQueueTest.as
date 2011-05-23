@@ -1,15 +1,20 @@
 package com.percentjuice.utils.movieClipWrappers
 {
+	import com.percentjuice.utils.movieClipWrappers.support.MCLoader;
+	import com.percentjuice.utils.movieClipWrappers.support.MCProperties;
+
 	import org.hamcrest.assertThat;
 	import org.hamcrest.core.allOf;
 	import org.hamcrest.core.throws;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasPropertyWithValue;
 	import org.hamcrest.object.instanceOf;
-	import org.osflash.signals.utils.*;
+	import org.osflash.signals.utils.SignalAsyncEvent;
+	import org.osflash.signals.utils.handleSignal;
 
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
+
 
 	public class TimelineWrapperQueueTest
 	{		
@@ -41,8 +46,8 @@ package com.percentjuice.utils.movieClipWrappers
 		{
 			var timelineWrapperQueue:TimelineWrapperQueue = new TimelineWrapperQueue(new TimelineWrapper(mcWithLabels));
 
-			handleSignal(this, timelineWrapperQueue.signal_reachedStop, handleLabelReached, 3000, propsForLabelsTest.assetLabels[1]);
-			handleSignal(this, timelineWrapperQueue.signal_queueComplete, handleLabelReached, 3000, propsForLabelsTest.assetLabels[3]);
+			handleSignal(this, timelineWrapperQueue.reachedStop, handleLabelReached, 3000, propsForLabelsTest.assetLabels[1]);
+			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 3000, propsForLabelsTest.assetLabels[3]);
 
 			timelineWrapperQueue.gotoAndPlayUntilNextLabel(propsForLabelsTest.assetLabels[1]);
 			timelineWrapperQueue.playWhenQueueEmpty(propsForLabelsTest.assetLabels[3]);

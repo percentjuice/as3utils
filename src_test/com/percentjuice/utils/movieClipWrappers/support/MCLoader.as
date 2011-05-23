@@ -1,4 +1,4 @@
-package com.percentjuice.utils.movieClipWrappers
+package com.percentjuice.utils.movieClipWrappers.support
 {
 	import org.osflash.signals.Signal;
 

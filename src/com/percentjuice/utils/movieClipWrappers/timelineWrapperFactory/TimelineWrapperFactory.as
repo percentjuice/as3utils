@@ -118,7 +118,7 @@ package com.percentjuice.utils.movieClipWrappers.timelineWrapperFactory
 			if (stopActiveAnimation)
 			{
 				timelineWrapper.stop();
-				timelineWrapper.signal_reachedStop.removeAll();
+				timelineWrapper.reachedStop.removeAll();
 			}
 
 			return timelineWrapper;
@@ -140,7 +140,7 @@ package com.percentjuice.utils.movieClipWrappers.timelineWrapperFactory
 			{
 				for each (var iTimelineWrapper:ITimelineWrapper in collection)
 				{
-					if (iTimelineWrapper.signal_reachedStop != null)
+					if (iTimelineWrapper.reachedStop != null)
 						iTimelineWrapper.destroy();
 				}
 				collection = null;

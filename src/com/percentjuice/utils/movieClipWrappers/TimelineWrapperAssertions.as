@@ -17,7 +17,7 @@ package com.percentjuice.utils.movieClipWrappers
 
 		internal function isInstanceDestroyed(instance:TimelineWrapper):Boolean
 		{
-			return instance.signal_reachedStop == null;
+			return instance.reachedStop == null;
 		}
 
 		internal function assertInstanceIsNotDestroyed(instance:TimelineWrapper):void

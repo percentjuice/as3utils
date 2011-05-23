@@ -1,7 +1,3 @@
-//------------------------------------------------------------------------------
-//copyright 2010 
-//------------------------------------------------------------------------------
-
 package com.percentjuice.utils.movieClipWrappers
 {
 	import flash.display.MovieClip;
@@ -14,9 +10,11 @@ package com.percentjuice.utils.movieClipWrappers
 	public interface ITimelineWrapper
 	{
 		/* required methods */
+		function gotoAndPlay(frame:Object, scene:String = null):void;
 		function gotoAndStop(frame:Object, scene:String = null):void;
 		function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void;
 		function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void;
+		function play():void;
 		function stop():void;
 		function destroy():void;
 		/* required props */
@@ -25,7 +23,7 @@ package com.percentjuice.utils.movieClipWrappers
 		function get currentFrame():int;
 		function get totalFrames():int;
 		function get isPlaying():Boolean;
-		function get signal_reachedStop():TimelineWrapperSignal;
+		function get reachedStop():TimelineWrapperSignal;
 	}
 }
 

@@ -1,11 +1,11 @@
 package
 {
-	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperSignalTest;
-	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperFactoryTest;
 	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperQueueTest;
+	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperSignalTest;
 	import com.percentjuice.utils.movieClipWrappers.TimelineWrapperTest;
-
+	import com.percentjuice.utils.movieClipWrappers.timelineWrapperFactory.TimelineWrapperFactoryTest;
 	import flash.display.Sprite;
+
 
 	[Suite]
 	[RunWith("org.flexunit.runners.Suite")]

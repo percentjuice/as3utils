@@ -1,6 +1,6 @@
-//------------------------------------------------------------------------------
-//copyright 2010 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// copyright 2010
+// ------------------------------------------------------------------------------
 
 package com.percentjuice.utils.nativeSignalDecorators
 {
@@ -9,6 +9,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 	import flash.media.SoundChannel;
 
 	import org.osflash.signals.natives.NativeSignal;
+
 	/**
 	 * Utility for common SoundChannel methods
 	 *  though no support for queuing.
@@ -18,7 +19,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 	 * allows for multiple overlapping loops.  all loops are tied to one kill switch.
 	 * @author C Stuempges
 	 */
-	public class SoundChannelDecorator  
+	public class SoundChannelDecorator
 	{
 		/**
 		 * @param loopingSound:
@@ -26,7 +27,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 		 * 		will only be used once.  SoundChannelMod uses this internally to create
 		 * 		multiple looping sounds.
 		 */
-		public function SoundChannelDecorator(loopingSound:Sound=null)
+		public function SoundChannelDecorator(loopingSound:Sound = null)
 		{
 			init(loopingSound);
 		}
@@ -67,7 +68,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 			else if (loopingSound)
 			{
 				loopingSound = null;
-				soundComplete=null;
+				soundComplete = null;
 			}
 			/* may have called killLooping() though no loops are running */
 			else
@@ -99,7 +100,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 		public function playOverriding(sound:Sound):void
 		{
 			persistantSoundChannel.stop();
-			_persistantSoundChannel = sound.play(0, 0);
+			_persistantSoundChannel = playSound(sound);
 		}
 
 		/**
@@ -109,8 +110,21 @@ package com.percentjuice.utils.nativeSignalDecorators
 		public function playOverlapping(sound:Sound):SoundChannel
 		{
 			var channel:SoundChannel = new SoundChannel();
-			channel = sound.play(0, 0);
+			channel = playSound(sound);
 			return channel;
+		}
+
+		private function playSound(sound:Sound):SoundChannel
+		{
+			try
+			{
+				return sound.play(0, 0);
+			}
+			catch (error:Error)
+			{
+				trace("SoundChannelDecorator::playSound " + error);
+			}
+			return null;
 		}
 
 		/**
@@ -141,7 +155,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 			/* this == not a child in loopingSCM */
 			if (!loopingSound)
 			{
-				soundComplete=null;
+				soundComplete = null;
 			}
 			/* child in loopingSCM */
 			else
@@ -150,11 +164,11 @@ package com.percentjuice.utils.nativeSignalDecorators
 			}
 		}
 
-		private function init(loopingSound:Sound=null):void
+		private function init(loopingSound:Sound = null):void
 		{
 			if (loopingSound)
 			{
-				this.loopingSound=loopingSound;
+				this.loopingSound = loopingSound;
 				playSoundConsecutive(loopingSound);
 			}
 		}

@@ -1,37 +1,118 @@
-//------------------------------------------------------------------------------
-//copyright 2010 
-//------------------------------------------------------------------------------
-
 package com.percentjuice.utils.movieClipWrappers
 {
 	import flash.display.MovieClip;
+
 	/**
 	 * Decorates TimelineWrapper
 	 * Adds ability to queue labelPlay requests.
 	 *
-	 * adds props:
-	 * * signal_queueComplete:TimelineWrapperSignal
-	 * adds methods:
-	 * * playLabelWhenReady(label:String):void
-	 * * clearQueue():void
-	 *
 	 * @author C Stuempges
 	 */
-	public class TimelineWrapperQueue implements ITimelineWrapper
+	public class TimelineWrapperQueue implements ITimelineWrapper, ITimelineWrapperQueue
 	{
+		private var timelineWrapper:ITimelineWrapper;
+		private var _queueComplete:TimelineWrapperSignal;
+		private var queueList:Array;
+
 		public function TimelineWrapperQueue(timelineWrapper:TimelineWrapper)
 		{
-			this.timelineWrapper=timelineWrapper;
+			this.timelineWrapper = timelineWrapper;
 			init();
 		}
 
-		private var timelineWrapper:TimelineWrapper;
-		private var _signal_queueComplete:TimelineWrapperSignal;
-		private var queueList:Array;
+		private function init():void
+		{
+			queueList = [];
+			_queueComplete = new TimelineWrapperSignal(this);
+			timelineWrapper.reachedStop.add(handleHitStopPointSignalDispatched);
+		}
+
+		private function handleHitStopPointSignalDispatched(signal:TimelineWrapperSignal):void
+		{
+			if (queueList.length)
+			{
+				gotoAndPlayUntilNextLabel(queueList.shift());
+			}
+			else
+			{
+				queueComplete.dispatchSignalClone(signal.completedRequest);
+			}
+		}
+
+		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void
+		{
+			timelineWrapper.gotoAndPlayUntilNextLabel(frame, scene);
+		}
+
+		/**
+		 * Plays label or frame number passed in if not busy.
+		 * Queues label or frame number if busy.
+		 */
+		public function playWhenQueueEmpty(frame:Object):void
+		{
+			if (!queueList.length && !isPlaying)
+			{
+				gotoAndPlayUntilNextLabel(frame);
+			}
+			else
+			{
+				queueList.push(frame);
+			}
+		}
+
+		public function isQueueEmpty():Boolean
+		{
+			return (queueList.length == 0);
+		}
 
 		public function clearQueue():void
 		{
-			queueList.length=0;
+			queueList.length = 0;
+		}
+
+		public function gotoAndStop(frame:Object, scene:String = null):void
+		{
+			timelineWrapper.gotoAndStop(frame, scene);
+		}
+
+		public function get totalFrames():int
+		{
+			return timelineWrapper.totalFrames;
+		}
+
+		public function play():void
+		{
+			timelineWrapper.play();
+		}
+
+		public function gotoAndPlay(frame:Object, scene:String = null):void
+		{
+			timelineWrapper.gotoAndPlay(frame, scene);
+		}
+
+		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
+		{
+			timelineWrapper.gotoAndPlayUntilStop(frame, stopOn, scene);
+		}
+
+		public function get reachedStop():TimelineWrapperSignal
+		{
+			return timelineWrapper.reachedStop;
+		}
+
+		public function get queueComplete():TimelineWrapperSignal
+		{
+			return _queueComplete;
+		}
+
+		public function stop():void
+		{
+			timelineWrapper.stop();
+		}
+
+		public function get isPlaying():Boolean
+		{
+			return timelineWrapper.isPlaying;
 		}
 
 		public function get wrappedMC():MovieClip
@@ -51,92 +132,11 @@ package com.percentjuice.utils.movieClipWrappers
 
 		public function destroy():void
 		{
-			_signal_queueComplete.removeAll();
-			_signal_queueComplete = null;
+			_queueComplete.removeAll();
+			_queueComplete = null;
 			queueList = null;
 
 			timelineWrapper.destroy();
-		}
-
-		public function gotoAndStop(frame:Object, scene:String = null):void
-		{
-			timelineWrapper.gotoAndStop(frame, scene);
-		}
-
-		public function get totalFrames():int
-		{
-			return timelineWrapper.totalFrames;
-		}
-
-		public function get playsQueuedUp():Boolean
-		{
-			return (queueList.length!=0);
-		}
-
-		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void
-		{
-			timelineWrapper.gotoAndPlayUntilNextLabel(frame, scene);
-		}
-
-		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
-		{
-			timelineWrapper.gotoAndPlayUntilStop(frame, stopOn, scene);
-		}
-
-		/**
-		 * Plays frame if not busy.
-		 * Queues frame if busy.
-		 * @param frame
-		 */
-		public function playWhenQueueEmpty(frame:Object):void
-		{
-			if (!queueList.length && !isPlaying)
-			{
-				gotoAndPlayUntilNextLabel(frame);
-			}
-			else
-			{
-				queueList.push(frame);
-			}
-		}
-
-		public function get signal_reachedStop():TimelineWrapperSignal
-		{
-			return timelineWrapper.signal_reachedStop;
-		}
-
-		public function get signal_queueComplete():TimelineWrapperSignal
-		{
-			return _signal_queueComplete;
-		}
-
-		public function stop():void
-		{
-			timelineWrapper.stop();
-		}
-
-		public function get isPlaying():Boolean
-		{
-			return timelineWrapper.isPlaying;
-		}
-
-		private function handleHitStopPointSignalDispatched(signal:TimelineWrapperSignal):void
-		{
-			if (queueList.length)
-			{
-				gotoAndPlayUntilNextLabel(queueList.shift());
-			}
-			else
-			{
-				signal_queueComplete.dispatchSignalClone(signal.completedRequest);
-			}
-		}
-
-		private function init():void
-		{
-			queueList = [];
-			_signal_queueComplete = new TimelineWrapperSignal(this);
-			timelineWrapper.signal_reachedStop.add(handleHitStopPointSignalDispatched);
 		}
 	}
 }
