@@ -81,9 +81,30 @@ package com.percentjuice.utils.movieClipWrappers
 		[Test(async)]
 		public function should_play_from_label_through_to_end():void
 		{
+			var timelineWrapperForLabelsTest:TimelineWrapper = getTimelineWrapperWithLabelsAndListener();
+			timelineWrapperForLabelsTest.gotoAndPlayUntilNextLabel('label3');
+		}
+
+		[Test(async)]
+		public function should_play_from_current_frame_through_to_end():void
+		{
+			mcWithLabels.gotoAndStop(10);
+			var timelineWrapperForLabelsTest:TimelineWrapper = getTimelineWrapperWithLabelsAndListener();
+			timelineWrapperForLabelsTest.play();
+		}
+
+		[Test(async)]
+		public function should_play_from_specific_frame_through_to_end():void
+		{
+			var timelineWrapperForLabelsTest:TimelineWrapper = getTimelineWrapperWithLabelsAndListener();
+			timelineWrapperForLabelsTest.gotoAndPlay(10);
+		}
+		
+		private function getTimelineWrapperWithLabelsAndListener():TimelineWrapper
+		{
 			var timelineWrapperForLabelsTest:TimelineWrapper = new TimelineWrapper(mcWithLabels);
 			handleSignal(this, timelineWrapperForLabelsTest.reachedStop, handleEndReached, 3000);
-			timelineWrapperForLabelsTest.gotoAndPlayUntilNextLabel('label3');
+			return timelineWrapperForLabelsTest;
 		}
 
 		private function handleEndReached(event:SignalAsyncEvent, passThroughData:*):void
@@ -95,9 +116,14 @@ package com.percentjuice.utils.movieClipWrappers
 		}
 
 		[Test(expects="flash.errors.IllegalOperationError")]
-		public function should_throw_error_if_used_after_destroy():void
+		public function run_should_throw_error_if_used_after_destroy():void
 		{
 			var timelineWrapper:TimelineWrapper = new TimelineWrapper(new MovieClip());
+			should_throw_error_if_used_after_destroy(timelineWrapper);
+		}
+
+		public static function should_throw_error_if_used_after_destroy(timelineWrapper:ITimelineWrapper):void
+		{
 			timelineWrapper.destroy();
 			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", TimelineWrapperAssertions.ATTEMPTED_ACCESS_OF_DESTROYED_INSTANCE))));
 		}

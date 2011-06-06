@@ -1,6 +1,5 @@
 package com.percentjuice.utils.movieClipWrappers
 {
-	import org.osflash.signals.Signal;
 	import org.flexunit.rules.IMethodRule;
 	import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
@@ -8,15 +7,8 @@ package com.percentjuice.utils.movieClipWrappers
 
 	public class TimelineWrapperSignalTest
 	{
+		private static const REQUEST:String = "sampleLabelRequest";
 		private static var timelineWrapperSignal:TimelineWrapperSignal;
-
-		private const REQUEST:String = "sampleLabelRequest";
-		private const HANDLE_SIGNAL_DISPATCHED_SIG_REST:Function = function(e:* = null, ...args):void
-		{
-		};
-		private const HANDLE_SIGNAL_DISPATCHED_SIG_EMPTY:Function = function():void
-		{
-		};
 
 		[Rule]
 		public var mockitoRule:IMethodRule = new MockitoRule();
@@ -43,18 +35,30 @@ package com.percentjuice.utils.movieClipWrappers
 			assertThat(REQUEST, equalTo(signalClone.completedRequest));
 		}
 
+
 		[Test]
 		public function should_not_force_any_signature_in_listener():void
 		{
-			// timelineWrapperSignal.addOnce(HANDLE_SIGNAL_DISPATCHED_SIG_EMPTY);
-			// timelineWrapperSignal.addOnce(HANDLE_SIGNAL_DISPATCHED_SIG_REST);
+			 signal_should_allow_dispatch(handleSignalDispatch_emptySignature);
+		}
+
+		[Test]
+		public function should_not_resist_rest_signature_in_listener():void
+		{
+			 signal_should_allow_dispatch(handleSignalDispatch_restSignature);
+		}
+
+		/*
+		 * This test fails without merging open pull request 40 from the as3-signals project.
+		 * * ref: https://github.com/robertpenner/as3-signals/pull/40
+		 */
+		private function signal_should_allow_dispatch(listenerFunction:Function):void
+		{
+			timelineWrapperSignal.addOnce(listenerFunction);
 			
-			var signal:Signal = new Signal();
-			signal.strict = false;
-			signal.add(handleSignalDispatch);
 			try
 			{
-				signal.dispatch(new String("test"));
+				timelineWrapperSignal.dispatchSignalClone(REQUEST);
 			}
 			catch (error:ArgumentError)
 			{
@@ -62,9 +66,9 @@ package com.percentjuice.utils.movieClipWrappers
 			}
 		}
 
-		private function handleSignalDispatch():void
-		{
-		}
+		private function handleSignalDispatch_emptySignature():void {}
+		
+		private function handleSignalDispatch_restSignature(e:* = null, ...args):void {}
 	}
 }
 

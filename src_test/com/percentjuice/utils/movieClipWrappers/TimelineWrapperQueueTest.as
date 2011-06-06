@@ -4,16 +4,11 @@ package com.percentjuice.utils.movieClipWrappers
 	import com.percentjuice.utils.movieClipWrappers.support.MCProperties;
 
 	import org.hamcrest.assertThat;
-	import org.hamcrest.core.allOf;
-	import org.hamcrest.core.throws;
 	import org.hamcrest.object.equalTo;
-	import org.hamcrest.object.hasPropertyWithValue;
-	import org.hamcrest.object.instanceOf;
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
 	import flash.display.MovieClip;
-	import flash.errors.IllegalOperationError;
 
 
 	public class TimelineWrapperQueueTest
@@ -67,11 +62,10 @@ package com.percentjuice.utils.movieClipWrappers
 		}
 
 		[Test(expects="flash.errors.IllegalOperationError")]
-		public function should_throw_error_if_used_after_destroy():void
+		public function run_should_throw_error_if_used_after_destroy():void
 		{
 			var timelineWrapperQueue:TimelineWrapperQueue = new TimelineWrapperQueue(new TimelineWrapper(new MovieClip));
-			timelineWrapperQueue.destroy();
-			assertThat(timelineWrapperQueue.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", TimelineWrapperAssertions.ATTEMPTED_ACCESS_OF_DESTROYED_INSTANCE))));
+			TimelineWrapperTest.should_throw_error_if_used_after_destroy(timelineWrapperQueue);
 		}
 	}
 }

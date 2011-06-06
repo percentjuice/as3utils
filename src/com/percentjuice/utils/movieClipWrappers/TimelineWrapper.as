@@ -40,12 +40,12 @@ package com.percentjuice.utils.movieClipWrappers
 			_reachedStop = new TimelineWrapperSignal(this);
 		}
 
-		public function play():void// TODO: requires test
+		public function play():void
 		{
 			gotoAndPlayUntilNextLabelOrStop(currentFrame, totalFrames, null);
 		}
 
-		public function gotoAndPlay(frame:Object, scene:String = null):void//TODO: requires test
+		public function gotoAndPlay(frame:Object, scene:String = null):void
 		{
 			gotoAndPlayUntilNextLabelOrStop(frame, totalFrames, scene);
 		}
