@@ -16,9 +16,9 @@ package com.percentjuice.utils
 
 		/**
 		 * locates the public props of $obj
-		 * @param $obj: the object to inspect.
-		 * @param nodeName: 'variable' grabs properties, 'method' grabs methods
-		 * @return: dictionary of nodes in $obj identified by nodeName
+		 * @param $obj the object to inspect.
+		 * @param nodeName 'variable' grabs properties, 'method' grabs methods
+		 * @return dictionary of nodes in $obj identified by nodeName
 		 */
 		public static const VARIABLE:String = 'variable';
 		public static const METHOD:String = 'method';
@@ -52,7 +52,7 @@ package com.percentjuice.utils
 		 */
 		/**
 		 * sets public properties of parent object equal to matching properties of $obj
-		 * @param $obj: object whose matching name/type properties will be duplicated (primitives) or pointed to (complex data types)
+		 * @param $obj object whose matching name/type properties will be duplicated (primitives) or pointed to (complex data types)
 		 * @param cloneData
 		 */
 		public static function propsFromObject(copyFrom:*, copyTo:*, cloneData:Boolean=false):void
@@ -73,10 +73,10 @@ package com.percentjuice.utils
 		/**
 		 * used by propsFromObject if a new instance of the copied property is desired.
 		 * create additional cases as needed.
-		 * @param prop: the value being duplicated
-		 * @param type: the value's type
-		 * @return: a new instance of the value
-		 * @throws Error: if attempting to duplicate an Object which is not handled
+		 * @param prop the value being duplicated
+		 * @param type the value's type
+		 * @return a new instance of the value
+		 * @throws Error if attempting to duplicate an Object which is not handled
 		 */
 		private static function returnNewRef(prop:*, type:*):*
 		{
@@ -110,7 +110,7 @@ package com.percentjuice.utils
 
 		/**
 		 * @param classIn
-		 * @return: the class name as String
+		 * @return the class name as String
 		 */
 		public static function getClassName(classIn:*):String
 		{
@@ -131,8 +131,8 @@ package com.percentjuice.utils
 
 		/**
 		 * checks whether one class is a child of another
-		 * @param doesThis: the possible child
-		 * @param extendThis: the possible parent
+		 * @param doesThis the possible child
+		 * @param extendThis the possible parent
 		 * @return
 		 */
 		public static function getDoesExtend(doesThis:*,extendThis:*):Boolean

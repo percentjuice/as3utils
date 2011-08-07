@@ -22,7 +22,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 	public class SoundChannelDecorator
 	{
 		/**
-		 * @param loopingSound:
+		 * @param loopingSound
 		 * sending a loopingSound on init doesn't make sense unless your SoundChannelMod
 		 * 		will only be used once.  SoundChannelMod uses this internally to create
 		 * 		multiple looping sounds.
@@ -90,7 +90,7 @@ package com.percentjuice.utils.nativeSignalDecorators
 				loopingSCM = [];
 			}
 			var scm:SoundChannelDecorator = new SoundChannelDecorator(sound);
-			loopingSCM.push(scm);
+			loopingSCM[loopingSCM.length] = scm;
 		}
 
 		/**
