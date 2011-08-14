@@ -27,7 +27,7 @@ package com.percentjuice.utils.timelineWrappers
 			timelineWrapperQueue.onDestroy.target = this;
 		}
 
-		private function handleQueueComplete():void
+		private function handleQueueComplete(...args):void
 		{
 			playDefaultAnim();
 		}

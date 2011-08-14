@@ -32,7 +32,7 @@ package com.percentjuice.utils.timelineWrappers
 			timelineWrapper.onDestroy.target = this;
 		}
 
-		private function handleHitStopPointSignalDispatched():void
+		private function handleHitStopPointSignalDispatched(...args):void
 		{
 			if (queueList.length)
 			{

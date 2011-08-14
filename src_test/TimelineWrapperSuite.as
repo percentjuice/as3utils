@@ -1,8 +1,8 @@
 package
 {
 	import com.percentjuice.utils.timelineWrappers.*;
-	import com.percentjuice.utils.timelineWrappers.factories.*;
-
+	import com.percentjuice.utils.timelineWrappers.builder.*;
+	import com.percentjuice.utils.timelineWrappers.factory.*;
 	import flash.display.Sprite;
 
 	[Suite]
