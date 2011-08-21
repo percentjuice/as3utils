@@ -1,9 +1,16 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
-	import org.flexunit.rules.IMethodRule;
-	import org.mockito.integrations.flexunit4.MockitoRule;
+	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 
+	import org.flexunit.rules.IMethodRule;
+	import org.hamcrest.assertThat;
+	import org.hamcrest.object.equalTo;
+	import org.mockito.integrations.any;
+	import org.mockito.integrations.flexunit4.MockitoRule;
+	import org.mockito.integrations.given;
+
+	import flash.display.MovieClip;
 
 	public class TimelineWrapperFactoryTest
 	{
@@ -19,7 +26,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		public function setup():void
 		{
 			timelineWrapperFactory = TimelineWrapperFactory.getInstance();
-			timelineWrapperFactory._collectionAccessor = accessor;
+			TimelineWrapperFactory.collectionAccessor = accessor;
 		}
 
 		[After]
@@ -44,6 +51,23 @@ package com.percentjuice.utils.timelineWrappers.factory
 		public function should_throw_error_on_instantiation_by_nonchild_class():void
 		{
 			TimelineWrapperFactoryTestRunner.should_throw_error_on_instantiation_by_nonchild_class(TimelineWrapperFactory);
+		}
+		
+		[Test]
+		public function should_cross_reference_other_factory_type_and_return_this_type():void
+		{
+			var timelineWrapper0:TimelineWrapper = new TimelineWrapper();
+			var movieClip:MovieClip = new MovieClip();
+			timelineWrapper0.wrappedMC = movieClip;
+			var timelineWrapperQueue:TimelineWrapperQueue = new TimelineWrapperQueue(timelineWrapper0);
+			
+			given(TimelineWrapperFactory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(timelineWrapperQueue);
+			var timelineWrapper1:TimelineWrapper = TimelineWrapper(timelineWrapperFactory.getOneWrapperPerMC(movieClip));
+			
+			assertThat(timelineWrapper0, equalTo(timelineWrapper1));
+
+			assertThat(timelineWrapper0.isDestroyed(), equalTo(false));
+			assertThat(timelineWrapperQueue.isDestroyed(), equalTo(true));
 		}
 	}
 }

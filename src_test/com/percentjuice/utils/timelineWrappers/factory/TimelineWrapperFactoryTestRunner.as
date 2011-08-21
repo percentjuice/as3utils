@@ -17,7 +17,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 
 		public static function should_return_correct_instance_type(classRequired:Class, factory:TimelineWrapperFactory):void
 		{
-			given(factory._collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(CollectionAccessor.DUMMY_WRAPPER);
+			given(TimelineWrapperFactory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(CollectionAccessor.DUMMY_WRAPPER);
 
 			var testInstance:* = classRequired(factory.getOneWrapperPerMC(new MovieClip()));
 			assertThat(testInstance, notNullValue);
@@ -27,7 +27,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		{
 			var movieClip:MovieClip = new MovieClip();
 			
-			given(factory._collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(CollectionAccessor.DUMMY_WRAPPER);
+			given(TimelineWrapperFactory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(CollectionAccessor.DUMMY_WRAPPER);
 			
 			var timelineWrapper0:ITimelineWrapper = factory.getOneWrapperPerMC(movieClip);
 			timelineWrapper0.destroy();

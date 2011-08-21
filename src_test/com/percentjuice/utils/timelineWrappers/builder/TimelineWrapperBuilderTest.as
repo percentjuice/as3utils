@@ -74,7 +74,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			test_results = [param1, param2, param3];
 		}
 
-		[Test(async, order=3)]
+		[Test(async)]
 		public function should_throw_error_if_used_after_dispatch():void
 		{
 			builtWrapperDestroy = TimelineWrapperBuilder

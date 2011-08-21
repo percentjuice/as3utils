@@ -1,12 +1,18 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
-	import com.percentjuice.utils.timelineWrappers.support.MCLoaded;
+
 	import org.flexunit.rules.IMethodRule;
+	import org.hamcrest.assertThat;
+	import org.hamcrest.object.equalTo;
+	import org.mockito.integrations.any;
 	import org.mockito.integrations.flexunit4.MockitoRule;
+	import org.mockito.integrations.given;
 
+	import flash.display.MovieClip;
 
-	public class TimelineWrapperQueueFactoryTest extends MCLoaded
+	public class TimelineWrapperQueueFactoryTest
 	{
 		[Rule]
 		public var mockitoRule:IMethodRule = new MockitoRule();
@@ -20,7 +26,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		public function setup():void
 		{
 			timelineWrapperQueueFactory = TimelineWrapperQueueFactory.getInstance();
-			timelineWrapperQueueFactory._collectionAccessor = accessor;
+			TimelineWrapperFactory.collectionAccessor = accessor;
 		}
 
 		[After]
@@ -41,11 +47,26 @@ package com.percentjuice.utils.timelineWrappers.factory
 			TimelineWrapperFactoryTestRunner.should_return_new_instance_for_same_movieclip_after_original_instance_destroyed(timelineWrapperQueueFactory);
 		}
 
-
 		[Test(expects="flash.errors.IllegalOperationError")]
 		public function should_throw_error_on_instantiation_by_nonchild_class():void
 		{
 			TimelineWrapperFactoryTestRunner.should_throw_error_on_instantiation_by_nonchild_class(TimelineWrapperQueueFactory);
+		}
+		
+		[Test]
+		public function should_cross_reference_other_factory_type_and_return_this_type():void
+		{
+			var timelineWrapper:TimelineWrapper = new TimelineWrapper();
+			var movieClip:MovieClip = new MovieClip();
+			timelineWrapper.wrappedMC = movieClip;
+			
+			given(TimelineWrapperFactory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(timelineWrapper);
+			var timelineWrapperQueue:TimelineWrapperQueue = TimelineWrapperQueue(timelineWrapperQueueFactory.getOneWrapperPerMC(movieClip));
+			
+			assertThat(timelineWrapper.isDestroyed(), equalTo(false));
+			assertThat(timelineWrapperQueue.isDestroyed(), equalTo(false));
+			
+			assertThat(timelineWrapperQueue.undecorate(), equalTo(timelineWrapper));
 		}
 	}
 }

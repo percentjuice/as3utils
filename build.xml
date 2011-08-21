@@ -1,4 +1,4 @@
-<project name="percentjuice_as3utils" basedir="." default="compile swc">
+<project name="percentjuice_as3utils" basedir="." default="create zip">
 	
 	<property file="build.properties" />
 

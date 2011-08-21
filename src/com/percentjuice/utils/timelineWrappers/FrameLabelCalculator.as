@@ -5,16 +5,22 @@ package com.percentjuice.utils.timelineWrappers
 	import flash.errors.IllegalOperationError;
 	public class FrameLabelCalculator
 	{
-		private var _wrappedMC:MovieClip;
+		private var wrappedMC:MovieClip;
 		private var l:int;
 
-		internal function getFrameBeforeNextLabelOrLastFrame(frame:Object):int
+		internal function from(wrappedMC:MovieClip):FrameLabelCalculator
 		{
-			l = _wrappedMC.currentLabels.length - 1;
+			this.wrappedMC = wrappedMC;
+			return this;
+		}
 
-			if (_wrappedMC.currentLabels.length == 0 || (String(frame) == (_wrappedMC.currentLabels[l] as FrameLabel).name) || (int(frame) > 0 && (_wrappedMC.currentLabels[l] as FrameLabel).frame <= frame))
+		internal function getNextLabelMinusOneFrameOrGetTotalFrames(frame:Object):int
+		{
+			l = wrappedMC.currentLabels.length - 1;
+
+			if (wrappedMC.currentLabels.length == 0 || (String(frame) == (wrappedMC.currentLabels[l] as FrameLabel).name) || (int(frame) > 0 && (wrappedMC.currentLabels[l] as FrameLabel).frame <= frame))
 			{
-				return _wrappedMC.totalFrames;
+				return wrappedMC.totalFrames;
 			}
 			else
 			{
@@ -24,42 +30,40 @@ package com.percentjuice.utils.timelineWrappers
 				if (String(frame) == null)
 					throw new IllegalOperationError("Not a settable Frame: '" + frame + "'");
 
-				return getFrameBeforeNextLabel(String(frame));
+				return getNextLabelMinusOneFrame(String(frame));
 			}
 		}
 
-		internal function getLabelForFrame(frame:int):String
+		/**
+		 * @throws IllegalOperationError if MovieClip has no label @frame
+		 */
+		private function getLabelForFrame(frame:int):String
 		{
-			for (l = _wrappedMC.currentLabels.length - 1; l != -1; l+=-1)
+			for (l = wrappedMC.currentLabels.length - 1; l != -1; l+=-1)
 			{
-				var fl:FrameLabel = _wrappedMC.currentLabels[l];
+				var fl:FrameLabel = wrappedMC.currentLabels[l];
 				if (fl.frame <= frame)
 				{
-					return FrameLabel(_wrappedMC.currentLabels[l]).name;
+					return FrameLabel(wrappedMC.currentLabels[l]).name;
 				}
 			}
-			throw new IllegalOperationError('Frame "' + frame + '" not found in ' + _wrappedMC);
+			throw new IllegalOperationError('Frame "' + frame + '" not found in ' + wrappedMC);
 		}
 
-		internal function getFrameBeforeNextLabel(label:String):int
+		internal function getNextLabelMinusOneFrame(label:String):int
 		{
-			l = _wrappedMC.currentLabels.length;
+			l = wrappedMC.currentLabels.length;
 
 			for (var i:int = 0; i < l; i++)
 			{
-				var fl:FrameLabel = _wrappedMC.currentLabels[i];
+				var fl:FrameLabel = wrappedMC.currentLabels[i];
 				if (fl.name == label)
 				{
-					var nextLabel:FrameLabel = FrameLabel(_wrappedMC.currentLabels[i + 1]);
+					var nextLabel:FrameLabel = FrameLabel(wrappedMC.currentLabels[i + 1]);
 					return nextLabel.frame - 1;
 				}
 			}
-			throw new IllegalOperationError('Label "' + label + '" not found in ' + _wrappedMC);
-		}
-
-		internal function set wrappedMC(wrappedMC:MovieClip):void
-		{
-			_wrappedMC = wrappedMC;
+			throw new IllegalOperationError('Label "' + label + '" not found in ' + wrappedMC);
 		}
 	}
 }

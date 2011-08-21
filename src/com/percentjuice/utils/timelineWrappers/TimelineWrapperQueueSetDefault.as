@@ -3,6 +3,7 @@ package com.percentjuice.utils.timelineWrappers
 	import org.osflash.signals.DeluxeSignal;
 
 	import flash.display.MovieClip;
+	import flash.errors.IllegalOperationError;
 
 	/**
 	 * Decorates TimelineWrapperQueue
@@ -12,19 +13,19 @@ package com.percentjuice.utils.timelineWrappers
 	 */
 	public class TimelineWrapperQueueSetDefault implements ITimelineWrapper, ITimelineWrapperQueue, ITimelineWrapperQueueSetDefault
 	{
-		private var timelineWrapperQueue:TimelineWrapperQueue;
+		private var _timelineWrapperQueue:TimelineWrapperQueue;
 		private var defaultAnim:Object = new String();
 
 		public function TimelineWrapperQueueSetDefault(timelineWrapperQueue:TimelineWrapperQueue)
 		{
-			this.timelineWrapperQueue = timelineWrapperQueue;
+			_timelineWrapperQueue = timelineWrapperQueue;
 			init();
 		}
 
 		private function init():void
 		{
-			timelineWrapperQueue.queueComplete.add(handleQueueComplete);
-			timelineWrapperQueue.onDestroy.target = this;
+			_timelineWrapperQueue.queueComplete.add(handleQueueComplete);
+			_timelineWrapperQueue.onDestroy.target = this;
 		}
 
 		private function handleQueueComplete(...args):void
@@ -117,10 +118,24 @@ package com.percentjuice.utils.timelineWrappers
 			timelineWrapperQueue.gotoAndPlay(frame, scene);
 		}
 
+		public function isDestroyed():Boolean
+		{
+			return _timelineWrapperQueue == null;
+		}
+
 		public function destroy():void
 		{
 			defaultAnim = null;
 			timelineWrapperQueue.destroy();
+		}
+
+		public function undecorate():ITimelineWrapper
+		{
+			defaultAnim = null;
+			
+			var undecorated:ITimelineWrapper = _timelineWrapperQueue;
+			_timelineWrapperQueue = null;
+			return undecorated;
 		}
 
 		public function set wrappedMC(wrappedMC:MovieClip):void
@@ -163,6 +178,11 @@ package com.percentjuice.utils.timelineWrappers
 			return timelineWrapperQueue.currentLabel;
 		}
 
+		public function get currentLabels():Array
+		{
+			return timelineWrapperQueue.currentLabels;
+		}
+
 		public function get currentFrame():int
 		{
 			return timelineWrapperQueue.currentFrame;
@@ -171,6 +191,14 @@ package com.percentjuice.utils.timelineWrappers
 		public function get totalFrames():int
 		{
 			return timelineWrapperQueue.totalFrames;
+		}
+
+		private function get timelineWrapperQueue():TimelineWrapperQueue
+		{
+			if (isDestroyed())
+				throw new IllegalOperationError("cannot perform function since instance was destroyed or undecorated.");
+				
+			return _timelineWrapperQueue;
 		}
 	}
 }

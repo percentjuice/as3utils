@@ -1,5 +1,7 @@
 package com.percentjuice.utils.timelineWrappers
 {
+	import flash.errors.IllegalOperationError;
+
 	import org.osflash.signals.DeluxeSignal;
 
 	import flash.display.MovieClip;
@@ -12,13 +14,13 @@ package com.percentjuice.utils.timelineWrappers
 	 */
 	public class TimelineWrapperQueue implements ITimelineWrapper, ITimelineWrapperQueue
 	{
-		private var timelineWrapper:TimelineWrapper;
+		private var _timelineWrapper:TimelineWrapper;
 		private var _queueComplete:UntypedSignal;
 		private var queueList:Array;
 
 		public function TimelineWrapperQueue(timelineWrapper:TimelineWrapper)
 		{
-			this.timelineWrapper = timelineWrapper;
+			_timelineWrapper = timelineWrapper;
 			init();
 		}
 
@@ -26,10 +28,10 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			queueList = [];
 			_queueComplete = new UntypedSignal();
-			
-			timelineWrapper.onComplete.add(handleHitStopPointSignalDispatched);
-			timelineWrapper.onDestroy.addOnce(handleDestroyed);
-			timelineWrapper.onDestroy.target = this;
+
+			_timelineWrapper.onComplete.add(handleHitStopPointSignalDispatched);
+			_timelineWrapper.onDestroy.add(handleDestroyed);
+			_timelineWrapper.onDestroy.target = this;
 		}
 
 		private function handleHitStopPointSignalDispatched(...args):void
@@ -95,18 +97,34 @@ package com.percentjuice.utils.timelineWrappers
 			timelineWrapper.gotoAndPlayUntilStop(frame, stopOn, scene);
 		}
 
+		public function isDestroyed():Boolean
+		{
+			return _timelineWrapper == null;
+		}
+
 		public function destroy():void
 		{
 			handleDestroyed(this);
-			timelineWrapper.onDestroy.remove(handleDestroyed);
-			timelineWrapper.destroy();
+			_timelineWrapper.destroy();
 		}
-		
+
 		private function handleDestroyed(timelineWrapper:ITimelineWrapper):void
 		{
+			timelineWrapper.onDestroy.remove(handleDestroyed);
+
+			clearQueue();
 			_queueComplete.removeAll();
 			_queueComplete = null;
-			queueList = null;
+		}
+
+		public function undecorate():ITimelineWrapper
+		{
+			if (!isDestroyed())
+				handleDestroyed(this);
+
+			var undecorated:ITimelineWrapper = _timelineWrapper;
+			_timelineWrapper = null;
+			return undecorated;
 		}
 
 		public function stop():void
@@ -154,6 +172,11 @@ package com.percentjuice.utils.timelineWrappers
 			return timelineWrapper.currentLabel;
 		}
 
+		public function get currentLabels():Array
+		{
+			return timelineWrapper.currentLabels;
+		}
+
 		public function get currentFrame():int
 		{
 			return timelineWrapper.currentFrame;
@@ -162,6 +185,14 @@ package com.percentjuice.utils.timelineWrappers
 		public function get totalFrames():int
 		{
 			return timelineWrapper.totalFrames;
+		}
+
+		private function get timelineWrapper():TimelineWrapper
+		{
+			if (isDestroyed())
+				throw new IllegalOperationError("cannot perform function since instance was destroyed or undecorated.");
+				
+			return _timelineWrapper;
 		}
 	}
 }

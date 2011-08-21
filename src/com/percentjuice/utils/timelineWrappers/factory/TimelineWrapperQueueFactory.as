@@ -29,12 +29,6 @@ package com.percentjuice.utils.timelineWrappers.factory
 			return instance;
 		}
 		
-		protected override function stopTimelineWrapper(timelineWrapper:ITimelineWrapper):void
-		{
-			timelineWrapper.stop();
-			(timelineWrapper as ITimelineWrapperQueue).clearQueue();
-		}
-
 		protected override function getNewTimelineWrapper(wrappedMovieClip:MovieClip):ITimelineWrapper
 		{
 			var timelineWrapper:TimelineWrapper = new TimelineWrapper();
@@ -42,6 +36,22 @@ package com.percentjuice.utils.timelineWrappers.factory
 			timelineWrapper.wrappedMC = wrappedMovieClip;
 
 			return timelineWrapperQueue;
+		}
+
+		protected override function get timelineClassConverter():TimelineClassConverter
+		{
+			if (_classConverter == null)
+			{
+				_classConverter = new TimelineQueueClassConverter();
+			}
+			return _classConverter;
+		}
+
+		public override function destroy():void
+		{
+			super.destroy();
+
+			instance = null;
 		}
 	}
 }

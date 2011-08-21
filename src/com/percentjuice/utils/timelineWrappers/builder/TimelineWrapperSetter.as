@@ -85,7 +85,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		public function noOnCompleteHandlerParams():ITimelineWrapperSetter
 		{
-			return null;
+			return this;
 		}
 	}
 }

@@ -6,15 +6,20 @@ package com.percentjuice.utils.timelineWrappers.builder
 	public class TimelineWrapperBuilder extends TimelineWrapperSetter implements ITimelineWrapperRequiredParamSetter
 	{
 		protected static var allowInstantiation:Boolean;
-		
+
 		private static const SINGLETON_ERROR:String = "Instantiation failed: use TimelineWrapperBuilder.initialize() method to retrieve Builder instance.";
 		private static var instance:TimelineWrapperBuilder;
 
 		public function TimelineWrapperBuilder()
 		{
 			if (allowInstantiation)
+			{
 				return;
-			throw new IllegalOperationError(SINGLETON_ERROR);
+			}
+			else
+			{
+				throw new IllegalOperationError(SINGLETON_ERROR);
+			}
 		}
 
 		private static function getInstance():TimelineWrapperBuilder
@@ -31,7 +36,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 		public static function initialize():ITimelineWrapperRequiredParamSetter
 		{
 			if (instance != null)
+			{
 				instance._timelineWrapper = nullTimelineWrapper;
+			}
 
 			return getInstance();
 		}

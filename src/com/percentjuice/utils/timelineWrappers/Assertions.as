@@ -9,7 +9,7 @@ package com.percentjuice.utils.timelineWrappers
 		public static const ATTEMPTED_INITIALIZATION_WITH_NULL_MOVIECLIP:String = "MovieClip is null.";
 		public static const ATTEMPTED_GOTO_WITH_NUMBER_AS_STRING:String = "] this String Request will be run by flash.display.MovieClip::gotoAndStop as a Number.  instead pass in a Number or rename your frame label.";
 
-		internal function assertNotNull(wrappedMC:MovieClip):void
+		internal function notNullValue(wrappedMC:MovieClip):void
 		{
 			if (wrappedMC == null)
 				throw new ArgumentError(ATTEMPTED_INITIALIZATION_WITH_NULL_MOVIECLIP);
@@ -17,7 +17,7 @@ package com.percentjuice.utils.timelineWrappers
 
 		internal function isInstanceDestroyed(instance:TimelineWrapper):Boolean
 		{
-			return instance.onComplete == null;
+			return instance._wrappedMC == null;
 		}
 
 		internal function assertInstanceIsNotDestroyed(instance:TimelineWrapper):void

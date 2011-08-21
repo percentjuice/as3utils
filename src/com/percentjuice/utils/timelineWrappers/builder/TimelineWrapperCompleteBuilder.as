@@ -4,9 +4,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
-	import com.percentjuice.utils.timelineWrappers.builder.dto.BuilderDTO;
-	import com.percentjuice.utils.timelineWrappers.builder.dto.BuilderDTOResetter;
-	import com.percentjuice.utils.timelineWrappers.builder.dto.BuilderDTOSetter;
+	import com.percentjuice.utils.timelineWrappers.builder.dto.*;
 	import com.percentjuice.utils.timelineWrappers.factory.TimelineWrapperFactory;
 	import com.percentjuice.utils.timelineWrappers.factory.TimelineWrapperQueueFactory;
 
@@ -29,7 +27,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 		public function build():ITimelineWrapper
 		{
 			builderDTOSetter.setProps(timelineWrapper);
-
 			if (builderDTO.queueEnabled)
 			{
 				builderDTOSetter.setQueueProps(timelineWrapper as TimelineWrapperQueue);
@@ -43,12 +40,13 @@ package com.percentjuice.utils.timelineWrappers.builder
 		protected function get timelineWrapper():ITimelineWrapper
 		{
 			if (_timelineWrapper == nullTimelineWrapper)
-				buildTimelineWrapper();
-
+			{
+				createTimelineWrapperPerSettings();
+			}
 			return _timelineWrapper;
 		}
 
-		private function buildTimelineWrapper():void
+		private function createTimelineWrapperPerSettings():void
 		{
 			if (builderDTO.preventRewrapping)
 			{

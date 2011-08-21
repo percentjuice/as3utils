@@ -18,6 +18,7 @@ package com.percentjuice.utils.timelineWrappers
 		function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void;
 		function play():void;
 		function stop():void;
+		function isDestroyed():Boolean;
 		function destroy():void;
 		/* setters */
 		function set destroyAfterComplete(value:Boolean):void;
@@ -27,6 +28,7 @@ package com.percentjuice.utils.timelineWrappers
 		function get onComplete():DeluxeSignal;
 		function get onDestroy():DeluxeSignal;
 		function get currentLabel():String;
+		function get currentLabels():Array;
 		function get currentFrame():int;
 		function get totalFrames():int;
 		function get isPlaying():Boolean;

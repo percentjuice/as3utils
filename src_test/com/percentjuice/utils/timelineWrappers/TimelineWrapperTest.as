@@ -8,6 +8,7 @@ package com.percentjuice.utils.timelineWrappers
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasPropertyWithValue;
 	import org.hamcrest.object.instanceOf;
+	import org.hamcrest.object.notNullValue;
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
@@ -31,12 +32,14 @@ package com.percentjuice.utils.timelineWrappers
 		[Test(async)]
 		public function should_play_from_label_through_to_next():void
 		{
+			start = 'label0';
 			timelineWrapper.wrappedMC = mcWithLabels;
 			handleSignal(this, timelineWrapper.onComplete, handleLabelReached, 1000);
-			timelineWrapper.gotoAndPlayUntilNextLabel(2);
+			
+			timelineWrapper.gotoAndPlayUntilNextLabel(start);
 		}
 
-		private function handleLabelReached(event:SignalAsyncEvent, passThroughData:*):void // TODO: abstract these tests
+		private function handleLabelReached(event:SignalAsyncEvent, passThroughData:*):void
 		{
 			var labelAtFrame1:String = propsForLabelsTest.assetLabels[0];
 			var frameRightBeforeNextLabel:int = 9;
@@ -52,6 +55,7 @@ package com.percentjuice.utils.timelineWrappers
 			stop = 1;
 			timelineWrapper.wrappedMC = mcWith1Frame;
 			handleSignal(this, timelineWrapper.onComplete, handleStopReached, 3000);
+			
 			timelineWrapper.gotoAndPlayUntilStop(start, stop);
 		}
 
@@ -61,7 +65,7 @@ package com.percentjuice.utils.timelineWrappers
 		}
 
 		[Test(async)]
-		public function should_play_from_frame_through_to_end():void
+		public function should_play_from_frame_through_to_end():void//params
 		{
 			timelineWrapper.wrappedMC = mcWithoutLabels;
 			test_playing_from_frame_through_to_end(timelineWrapper);
@@ -129,6 +133,18 @@ package com.percentjuice.utils.timelineWrappers
 		public static function should_throw_error_if_used_after_destroy(timelineWrapper:ITimelineWrapper):void
 		{
 			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", Assertions.ATTEMPTED_ACCESS_OF_DESTROYED_INSTANCE))));
+		}
+		
+		[Test]
+		public function destroy_should_not_harm_decorated():void
+		{
+			var movieClip:MovieClip = new MovieClip();
+			timelineWrapper.wrappedMC = movieClip;
+			
+			timelineWrapper.destroy();
+			
+			assertThat(timelineWrapper.isDestroyed(), equalTo(true));
+			assertThat(movieClip, notNullValue());
 		}
 	}
 }

@@ -16,11 +16,12 @@ package com.percentjuice.utils.timelineWrappers.factory
 	public class TimelineWrapperFactory
 	{
 		protected static var allowInstantiation:Boolean;
-		
+
 		private static const SINGLETON_ERROR:String = "Instantiation failed: Use .getInstance() for Singleton instance.";
 		private static var instance:TimelineWrapperFactory;
 
-		internal var _collectionAccessor:CollectionAccessor;
+		internal static var collectionAccessor:CollectionAccessor;
+		internal var _classConverter:TimelineClassConverter;
 
 		public static function getInstance():TimelineWrapperFactory
 		{
@@ -36,8 +37,14 @@ package com.percentjuice.utils.timelineWrappers.factory
 		public function TimelineWrapperFactory():void
 		{
 			if (allowInstantiation)
+			{
+				collectionAccessor = collectionAccessor || new CollectionAccessor();
 				return;
-			throw new IllegalOperationError(SINGLETON_ERROR);
+			}
+			else
+			{
+				throw new IllegalOperationError(SINGLETON_ERROR);
+			}
 		}
 
 		/**
@@ -62,15 +69,10 @@ package com.percentjuice.utils.timelineWrappers.factory
 			}
 			else
 			{
-				stopTimelineWrapper(timelineWrapper);
+				timelineWrapper = timelineClassConverter.fromInstance(timelineWrapper);
 			}
 
 			return timelineWrapper;
-		}
-
-		protected function stopTimelineWrapper(timelineWrapper:ITimelineWrapper):void
-		{
-			timelineWrapper.stop();
 		}
 
 		protected function getNewTimelineWrapper(wrappedMovieClip:MovieClip):ITimelineWrapper
@@ -81,16 +83,19 @@ package com.percentjuice.utils.timelineWrappers.factory
 			return timelineWrapper;
 		}
 
-		private function get collectionAccessor():CollectionAccessor
+		protected function get timelineClassConverter():TimelineClassConverter
 		{
-			if (_collectionAccessor == null)
-				_collectionAccessor = new CollectionAccessor();
-			return _collectionAccessor;
+			if (_classConverter == null)
+			{
+				_classConverter = new TimelineClassConverter();
+			}
+			return _classConverter;
 		}
 
 		public function destroy():void
 		{
-			_collectionAccessor.destroy();
+			collectionAccessor.destroy();
+			collectionAccessor = null;
 
 			instance = null;
 		}
