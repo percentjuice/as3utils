@@ -34,10 +34,6 @@ package com.percentjuice.utils.designPatternParents
 			registerNonDecorated();
 		}
 
-		/**
-		 * @private
-		 * decorated object. accessible via this decorator.
-		 */
 		private var _decorated:Object;
 
 		/**

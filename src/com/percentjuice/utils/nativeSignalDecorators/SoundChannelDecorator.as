@@ -35,15 +35,15 @@ package com.percentjuice.utils.nativeSignalDecorators
 		public var soundComplete:NativeSignal;
 		private var loopingSCM:Array;
 		private var loopingSound:Sound;
-		private var _persistantSoundChannel:SoundChannel;
+		private var _persistantChannel:SoundChannel;
 
-		private function get persistantSoundChannel():SoundChannel
+		private function get persistantChannel():SoundChannel
 		{
-			if (!_persistantSoundChannel)
+			if (!_persistantChannel)
 			{
-				_persistantSoundChannel = new SoundChannel();
+				_persistantChannel = new SoundChannel();
 			}
-			return _persistantSoundChannel;
+			return _persistantChannel;
 		}
 
 		/**
@@ -80,7 +80,6 @@ package com.percentjuice.utils.nativeSignalDecorators
 		/**
 		 * fires sound immediately in new SoundChannel.
 		 * Sound(s) will loop until killLooping() is called.
-		 *
 		 */
 		public function loopSound(sound:Sound):void
 		{
@@ -99,8 +98,8 @@ package com.percentjuice.utils.nativeSignalDecorators
 		 */
 		public function playOverriding(sound:Sound):void
 		{
-			persistantSoundChannel.stop();
-			_persistantSoundChannel = playSound(sound);
+			persistantChannel.stop();
+			_persistantChannel = playSound(sound);
 		}
 
 		/**
@@ -109,9 +108,9 @@ package com.percentjuice.utils.nativeSignalDecorators
 		 */
 		public function playOverlapping(sound:Sound):SoundChannel
 		{
-			var channel:SoundChannel = new SoundChannel();
-			channel = playSound(sound);
-			return channel;
+			var temporaryChannel:SoundChannel = new SoundChannel();
+			temporaryChannel = playSound(sound);
+			return temporaryChannel;
 		}
 
 		private function playSound(sound:Sound):SoundChannel

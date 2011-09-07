@@ -1,6 +1,6 @@
-//------------------------------------------------------------------------------
-//copyright 2010 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// copyright 2010
+// ------------------------------------------------------------------------------
 
 package com.percentjuice.utils.nativeSignalDecorators
 {
@@ -8,19 +8,25 @@ package com.percentjuice.utils.nativeSignalDecorators
 	import flash.utils.Timer;
 
 	import org.osflash.signals.natives.NativeSignal;
+
 	public class TimerDecorator extends Timer
 	{
 
-		public function TimerDecorator(delay:Number, repeatCount:int=0,noPause:Boolean=false)
+		/**
+		 * @param delay The delay, in milliseconds, between timer events.
+		 * @param repeatCount The total number of times the timer is set to run.  0 == forever.
+		 * @param noPause set true to fire first Event on start
+		 */
+		public function TimerDecorator(delay:Number, repeatCount:int = 0, noPause:Boolean = false)
 		{
 			super(delay, repeatCount);
-			this.noPause=noPause;
+			this.noPause = noPause;
 			init();
 		}
 
 		public var timerComplete:NativeSignal;
 		public var timerEvent:NativeSignal;
-		/* does not initially wait to fire first Event */
+
 		private var noPause:Boolean;
 
 		override public function start():void

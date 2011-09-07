@@ -2,6 +2,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 {
 	import com.percentjuice.utils.timelineWrappers.DummyTimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
+
 	import flash.display.MovieClip;
 
 
@@ -68,9 +69,20 @@ package com.percentjuice.utils.timelineWrappers.factory
 			l = oldCollection.length - 1;
 			for (; l != -1; l += -1)
 			{
-				if (oldCollection[l] == DUMMY_WRAPPER)
+				var timelineWrapper:ITimelineWrapper = oldCollection[l];
+				if (timelineWrapper == DUMMY_WRAPPER)
+				{
 					continue;
-				else referenceCountCollection[i++] = oldCollection[l];
+				}
+				else if (timelineWrapper.wrappedMC == null)
+				{
+					timelineWrapper.destroy();
+					continue;
+				}
+				else
+				{
+					referenceCountCollection[i++] = oldCollection[l];
+				}
 			}
 		}
 
@@ -93,9 +105,13 @@ package com.percentjuice.utils.timelineWrappers.factory
 		public function destroy():void
 		{
 			if (referenceCountCollection == null)
+			{
 				return;
+			}
 			else
+			{
 				destroyCollection();
+			}
 		}
 
 		private function destroyCollection():void

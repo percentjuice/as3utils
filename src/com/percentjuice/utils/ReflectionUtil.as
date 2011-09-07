@@ -9,7 +9,6 @@ package com.percentjuice.utils
 	import flash.utils.describeType;
 	public class ReflectionUtil
 	{
-
 		//----------------------------------------------------------------------------
 		//  Methods which inspect the public instance properties/methods of an Object
 		//----------------------------------------------------------------------------

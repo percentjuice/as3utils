@@ -1,6 +1,6 @@
 package com.percentjuice.utils.timelineWrappers
 {
-	import com.percentjuice.utils.timelineWrappers.support.MCLoaded;
+	import com.percentjuice.utils.timelineWrappers.support.MovieClipsLoaded;
 
 	import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
@@ -8,7 +8,9 @@ package com.percentjuice.utils.timelineWrappers
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
-	public class TimelineWrapperQueueTest extends MCLoaded
+	import flash.display.FrameLabel;
+
+	public class TimelineWrapperQueueTest extends MovieClipsLoaded
 	{		
 		private var timelineWrapper:TimelineWrapper;
 		private var timelineWrapperQueue:TimelineWrapperQueue;
@@ -24,11 +26,11 @@ package com.percentjuice.utils.timelineWrappers
 		[Test(async)]
 		public function should_show_final_frame_is_queued_request():void
 		{
-			handleSignal(this, timelineWrapperQueue.onComplete, handleLabelReached, 3000, [timelineWrapperQueue.onComplete, propsForLabelsTest.assetLabels[1]]);
-			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 3000, [timelineWrapperQueue.queueComplete, propsForLabelsTest.assetLabels[3]]);
+			handleSignal(this, timelineWrapperQueue.onComplete, handleLabelReached, 3000, [timelineWrapperQueue.onComplete, FrameLabel(mcWithLabels.currentLabels[1]).name]);
+			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 3000, [timelineWrapperQueue.queueComplete, FrameLabel(mcWithLabels.currentLabels[3]).name]);
 
-			timelineWrapperQueue.gotoAndPlayUntilNextLabel(propsForLabelsTest.assetLabels[1]);
-			timelineWrapperQueue.playWhenQueueEmpty(propsForLabelsTest.assetLabels[3]);
+			timelineWrapperQueue.gotoAndPlayUntilNextLabel(FrameLabel(mcWithLabels.currentLabels[1]).name);
+			timelineWrapperQueue.playWhenQueueEmpty(FrameLabel(mcWithLabels.currentLabels[3]).name);
 		}
 
 		private function handleLabelReached(event:SignalAsyncEvent, passThroughData:*):void

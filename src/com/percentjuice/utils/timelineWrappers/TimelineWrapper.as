@@ -50,14 +50,14 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void
 		{
-			gotoAndPlayUntilNextLabelOrStop(frame, frameLabelCalculator.from(wrappedMC).getNextLabelMinusOneFrameOrGetTotalFrames(frame), scene);
+			gotoAndPlayUntilNextLabelOrStop(frame, frameLabelCalculator.getFrameBeforeNextLabel(wrappedMC, frame), scene);
 		}
 
 		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
 		{
 			if (stopOn is String)
 			{
-				stopOn = frameLabelCalculator.from(wrappedMC).getNextLabelMinusOneFrame(stopOn as String);
+				stopOn = frameLabelCalculator.getFrameBeforeNextLabel(wrappedMC, stopOn);
 			}
 
 			gotoAndPlayUntilNextLabelOrStop(frame, stopOn as int, scene);

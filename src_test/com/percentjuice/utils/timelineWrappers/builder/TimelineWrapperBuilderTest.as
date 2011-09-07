@@ -1,7 +1,7 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
-	import com.percentjuice.utils.timelineWrappers.support.MCLoaded;
+	import com.percentjuice.utils.timelineWrappers.support.MovieClipsLoaded;
 	import flash.utils.setTimeout;
 	import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
@@ -9,7 +9,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
-	public class TimelineWrapperBuilderTest extends MCLoaded
+	public class TimelineWrapperBuilderTest extends MovieClipsLoaded
 	{
 		private static const TEST_PARAMS:Array = ["param0", 1, 2];
 

@@ -1,6 +1,6 @@
 package com.percentjuice.utils.timelineWrappers
 {
-	import com.percentjuice.utils.timelineWrappers.support.MCLoaded;
+	import com.percentjuice.utils.timelineWrappers.support.MovieClipsLoaded;
 
 	import org.hamcrest.assertThat;
 	import org.hamcrest.core.allOf;
@@ -12,121 +12,145 @@ package com.percentjuice.utils.timelineWrappers
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
+	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 
-	public class TimelineWrapperTest extends MCLoaded
+	[RunWith("org.flexunit.runners.Parameterized")]
+	public class TimelineWrapperTest extends MovieClipsLoaded
 	{
+		private static const NO_FRAME:int = 0;
+		private static const NO_NAME:String = "";
+		
 		private var timelineWrapper:ITimelineWrapper;
-		private var start:Object;
-		private var stop:Object;
+		private var timelineWrapperLabels:ITimelineWrapper;
+		private var timelineWrapperNoLabels:ITimelineWrapper;
+
+		private var movieClip:MovieClip;
 
 		[Before]
 		public function setup():void
 		{
+			movieClip = new MovieClip();
+
 			timelineWrapper = new TimelineWrapper();
-			start = {};
-			stop = {};
+			timelineWrapper.wrappedMC = movieClip;
+
+			timelineWrapperLabels = new TimelineWrapper();
+			timelineWrapperLabels.wrappedMC = mcWithLabels;
+
+			timelineWrapperNoLabels = new TimelineWrapper();
+			timelineWrapperNoLabels.wrappedMC = mcWithoutLabels;
 		}
 
 		[Test(async)]
-		public function should_play_from_label_through_to_next():void
+		public function should_play_to_end_of_timeline():void
 		{
-			start = 'label0';
-			timelineWrapper.wrappedMC = mcWithLabels;
-			handleSignal(this, timelineWrapper.onComplete, handleLabelReached, 1000);
+			playFunctionWithParam(timelineWrapperLabels, timelineWrapperLabels.play, null);
+
+			playFunctionWithParam(timelineWrapperNoLabels, timelineWrapperNoLabels.play, null);
+		}
+
+		private function playFunctionWithParam(timelineWrapper:ITimelineWrapper, play:Function, params:*):void
+		{
+			handleSignal(this, timelineWrapperNoLabels.onComplete, handleShouldBeAtTotalFrames, 5000, timelineWrapper);
+
+			if (params == null)
+				play();
+			else
+				play(params);
+		}
+
+		private function handleShouldBeAtTotalFrames(event:SignalAsyncEvent, timelineWrapper:ITimelineWrapper):void
+		{
+			assertThat(timelineWrapper.currentFrame, equalTo(timelineWrapper.totalFrames));
+		}
+
+		public static function playPointsTestData():Array
+		{
+			return [[1], [10], [20], [30], [40]];
+		}
+
+		[Test(dataProvider="playPointsTestData",async)]
+		public function should_gotoAndPlay_to_end_of_timeline(input:Object):void
+		{
+			playFunctionWithParam(timelineWrapperLabels, timelineWrapperLabels.gotoAndPlay, input);
+
+			playFunctionWithParam(timelineWrapperNoLabels, timelineWrapperNoLabels.gotoAndPlay, input);
+			playFunctionWithParam(timelineWrapperNoLabels, timelineWrapperNoLabels.gotoAndPlayUntilNextLabel, input);
+		}
+
+		public static function playExpectedResultTestData():Array
+		{
+			return 	[
+					[new FrameLabel(NO_NAME, 1), new FrameLabel(null, 1)],
+					[new FrameLabel(NO_NAME, 2), new FrameLabel("label0", 9)],
+					[new FrameLabel("label0", NO_FRAME), new FrameLabel("label0", 9)],
+					[new FrameLabel(NO_NAME, 30), new FrameLabel("label3", 40)],
+					[new FrameLabel("label3", NO_FRAME), new FrameLabel("label3", 40)]
+					];
+		}
+
+		[Test(dataProvider="playExpectedResultTestData",async)]
+		public function should_gotoAndPlay_to_expectedResult(play:FrameLabel, expectedResult:FrameLabel):void
+		{
+			var playObject:Object = (play.frame == NO_FRAME) ? play.name : play.frame;
 			
-			timelineWrapper.gotoAndPlayUntilNextLabel(start);
-		}
-
-		private function handleLabelReached(event:SignalAsyncEvent, passThroughData:*):void
-		{
-			var labelAtFrame1:String = propsForLabelsTest.assetLabels[0];
-			var frameRightBeforeNextLabel:int = 9;
-
-			assertThat(labelAtFrame1, equalTo(timelineWrapper.currentLabel));
-			assertThat(frameRightBeforeNextLabel, equalTo(timelineWrapper.currentFrame));
-		}
-
-		[Test(async)]
-		public function should_play_from_specific_frame_through_to_stop():void
-		{
-			start = 1;
-			stop = 1;
-			timelineWrapper.wrappedMC = mcWith1Frame;
-			handleSignal(this, timelineWrapper.onComplete, handleStopReached, 3000);
+			handleSignal(this, timelineWrapperLabels.onComplete, handleShouldBeAtExpectedResult, 5000, expectedResult);
 			
-			timelineWrapper.gotoAndPlayUntilStop(start, stop);
+			timelineWrapperLabels.gotoAndPlayUntilNextLabel(playObject);
 		}
 
-		private function handleStopReached(event:SignalAsyncEvent, passThroughData:*):void
+		private function handleShouldBeAtExpectedResult(event:SignalAsyncEvent, expectedResult:FrameLabel):void
 		{
-			assertThat(stop, equalTo(timelineWrapper.currentFrame));
+			assertThat(timelineWrapperLabels.currentLabel, equalTo(expectedResult.name));
+			assertThat(timelineWrapperLabels.currentFrame, equalTo(expectedResult.frame));
 		}
 
-		[Test(async)]
-		public function should_play_from_frame_through_to_end():void//params
+		public static function playStopTestData():Array
 		{
-			timelineWrapper.wrappedMC = mcWithoutLabels;
-			test_playing_from_frame_through_to_end(timelineWrapper);
-			timelineWrapper.wrappedMC = mcWith1Frame;
-			test_playing_from_frame_through_to_end(timelineWrapper);
+			return 	[
+					[new FrameLabel(NO_NAME, 1), new FrameLabel(NO_NAME, 1)],
+					[new FrameLabel(NO_NAME, 2), new FrameLabel(NO_NAME, 10)],
+					[new FrameLabel("label0", NO_FRAME), new FrameLabel("label1", NO_FRAME)],
+					[new FrameLabel(NO_NAME, 10), new FrameLabel(NO_NAME, 30)],
+					[new FrameLabel("label1", NO_FRAME), new FrameLabel("label3", NO_FRAME)],
+					[new FrameLabel("label3", NO_FRAME), new FrameLabel("label3", NO_FRAME)],
+					[new FrameLabel("label3", NO_FRAME), new FrameLabel(NO_NAME, 40)],
+					];
 		}
 
-		private function test_playing_from_frame_through_to_end(timelineWrapper:ITimelineWrapper):void
+		[Test(dataProvider="playStopTestData",async)]
+		public function should_gotoAndPlay_to_stop(play:FrameLabel, stop:FrameLabel):void
 		{
-			handleSignal(this, timelineWrapper.onComplete, handleEndReached, 3000, timelineWrapper);
-			timelineWrapper.gotoAndPlayUntilNextLabel(1);
+			var playParam:Object = (play.frame == NO_FRAME) ? play.name : play.frame;
+			var stopParam:Object = (stop.frame == NO_FRAME) ? stop.name : stop.frame;
+			
+			handleSignal(this, timelineWrapperLabels.onComplete, handleShouldBeAtStop, 5000, stopParam);
+			
+			timelineWrapperLabels.gotoAndPlayUntilStop(playParam, stopParam);
 		}
 
-		[Test(async)]
-		public function should_play_from_label_through_to_end():void
+		private function handleShouldBeAtStop(event:SignalAsyncEvent, stopParam:Object):void
 		{
-			getTimelineWrapperWithLabelsAndListener().gotoAndPlayUntilNextLabel('label3');
-		}
-
-		[Test(async)]
-		public function should_play_from_current_frame_through_to_end():void
-		{
-			timelineWrapper.wrappedMC = mcWithLabels;
-			timelineWrapper.gotoAndStop(10);
-			handleSignal(this, timelineWrapper.onComplete, handleEndReached, 3000, timelineWrapper);
-			timelineWrapper.play();
-
-			timelineWrapper.wrappedMC = mcWith1Frame;
-			handleSignal(this, timelineWrapper.onComplete, handleEndReached, 500, timelineWrapper);
-			timelineWrapper.play();
-		}
-
-		[Test(async)]
-		public function should_play_from_specific_frame_through_to_end():void
-		{
-			getTimelineWrapperWithLabelsAndListener().gotoAndPlay(10);
-
-			timelineWrapper.wrappedMC = mcWith1Frame;
-			timelineWrapper.gotoAndPlay(1);
-		}
-
-		private function getTimelineWrapperWithLabelsAndListener():ITimelineWrapper
-		{
-			timelineWrapper.wrappedMC = mcWithLabels;
-			handleSignal(this, timelineWrapper.onComplete, handleEndReached, 3000, timelineWrapper);
-			return timelineWrapper;
-		}
-
-		private function handleEndReached(event:SignalAsyncEvent, passThroughData:*):void
-		{
-			var requestDispatcher:ITimelineWrapper = ITimelineWrapper(passThroughData);
-
-			assertThat(requestDispatcher.totalFrames, equalTo(requestDispatcher.currentFrame));
+			var timelineWrapperResult:Object;
+			
+			if (stopParam is String)
+			{
+				timelineWrapperResult = timelineWrapperLabels.currentLabel;
+			}
+			else
+			{
+				timelineWrapperResult = timelineWrapperLabels.currentFrame;
+			}
+			
+			assertThat(timelineWrapperResult, equalTo(stopParam));
 		}
 
 		[Test(expects="flash.errors.IllegalOperationError")]
 		public function run_should_throw_error_if_used_after_destroy():void
 		{
-			timelineWrapper.wrappedMC = new MovieClip();
 			timelineWrapper.destroy();
-
 			should_throw_error_if_used_after_destroy(timelineWrapper);
 		}
 
@@ -134,15 +158,12 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", Assertions.ATTEMPTED_ACCESS_OF_DESTROYED_INSTANCE))));
 		}
-		
+
 		[Test]
 		public function destroy_should_not_harm_decorated():void
 		{
-			var movieClip:MovieClip = new MovieClip();
-			timelineWrapper.wrappedMC = movieClip;
-			
 			timelineWrapper.destroy();
-			
+
 			assertThat(timelineWrapper.isDestroyed(), equalTo(true));
 			assertThat(movieClip, notNullValue());
 		}

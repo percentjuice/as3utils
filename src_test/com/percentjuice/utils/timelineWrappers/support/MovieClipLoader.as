@@ -7,21 +7,21 @@ package com.percentjuice.utils.timelineWrappers.support
 	/**
 	 * Asynchronous Loading of Embedded SWF's.
 	 */
-	public class MCLoader
+	public class MovieClipLoader
 	{
 		public var signal_loadComplete:Signal;
 
 		private var loaders:Vector.<LoaderHandler>;
 
-		public function MCLoader()
+		public function MovieClipLoader()
 		{
 			signal_loadComplete = new Signal(Class, MovieClip);
 			loaders = new <LoaderHandler>[];
 		}
 
-		public function load(asset:MCProperties):void
+		public function load(assetClass:Class):void
 		{
-			var loader:LoaderHandler = new LoaderHandler(asset.assetClass);
+			var loader:LoaderHandler = new LoaderHandler(assetClass);
 			loaders[loaders.length] = loader;
 			loader.signal_loadComplete.addOnce(loadCompleteListener);
 		}
@@ -43,7 +43,9 @@ import flash.display.MovieClip;
 import flash.events.Event;
 
 /**
- * ByteArrayAsset method used here required per Loader idiosyncrasies.
+ * Handles Embedded Assets so that we know when they are actually loaded.
+ * Flash will load them with a slight delay & using a proxy object.
+ * ByteArrayAsset method is the solution.
  */
 class LoaderHandler
 {
