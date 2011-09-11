@@ -1,28 +1,45 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	public class TimelineWrapperSetter extends TimelineWrapperTriggerer implements ITimelineWrapperSetter, ITimelineWrapperSetterHandlerParams, ITimelineWrapperQueueSetterAndTriggerer, ITimelineWrapperQueueSetterHandlerParams
+	public class TimelineWrapperSetter extends TimelineWrapperTriggerer implements ITimelineWrapperSetter, ITimelineWrapperCompleteHandlerParams, ITimelineWrapperQueueSetterAndTriggerer, ITimelineWrapperQueueSetterHandlerParams, ITimelineWrapperDestroyHandlerParams
 	{
-		public function setOnCompleteHandler(handler:Function):ITimelineWrapperSetterHandlerParams
+		public function setOnCompleteHandler(handler:Function):ITimelineWrapperCompleteHandlerParams
 		{
 			builderDTO.onCompleteHandler = handler;
 			return this;
 		}
 
-		public function setOnceOnCompleteHandler(handler:Function):ITimelineWrapperSetterHandlerParams
+		public function setOnceOnCompleteHandler(handler:Function):ITimelineWrapperCompleteHandlerParams
 		{
 			builderDTO.onceOnCompleteHandler = handler;
 			return this;
 		}
 
-		public function addOnCompleteHandlerParams(params:Array):ITimelineWrapperSetter
+		public function addOnCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array):ITimelineWrapperSetter
 		{
-			builderDTO.onCompleteHandlerParams = params;
+			builderDTO.firstCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
+			builderDTO.onCompleteHandlerParams = concatParams;
 			return this;
 		}
 
-		public function setOnceOnDestroyHandler(handler:Function):ITimelineWrapperSetter
+		public function noOnCompleteHandlerParams():ITimelineWrapperSetter
+		{
+			return this;
+		}
+
+		public function setOnceOnDestroyHandler(handler:Function):ITimelineWrapperDestroyHandlerParams
 		{
 			builderDTO.onceOnDestroyHandler = handler;
+			return this;
+		}
+
+		public function concatParamsToTimelineWrapper(concatParams:Array):ITimelineWrapperSetter
+		{
+			builderDTO.onDestroyHandlerParams = concatParams;
+			return this;
+		}
+		
+		public function noAdditionalOnDestroyHandlerParams():ITimelineWrapperSetter
+		{
 			return this;
 		}
 
@@ -67,9 +84,10 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return this;
 		}
 
-		public function addQueueCompleteHandlerParams(params:Array):ITimelineWrapperQueueSetterAndTriggerer
+		public function addQueueCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array):ITimelineWrapperQueueSetterAndTriggerer
 		{
-			builderDTO.queueCompleteHandlerParams = params;
+			builderDTO.firstQueueCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
+			builderDTO.queueCompleteHandlerParams = concatParams;
 			return this;
 		}
 
@@ -79,11 +97,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 		}
 
 		public function addAutoPlayFunction():ITimelineWrapperTriggerer
-		{
-			return this;
-		}
-
-		public function noOnCompleteHandlerParams():ITimelineWrapperSetter
 		{
 			return this;
 		}

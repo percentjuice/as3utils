@@ -2,7 +2,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 {
 	public interface ITimelineWrapperQueueSetterHandlerParams
 	{
-		function addQueueCompleteHandlerParams(params:Array):ITimelineWrapperQueueSetterAndTriggerer;
+		function addQueueCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array):ITimelineWrapperQueueSetterAndTriggerer;
 		
 		function noQueueCompleteHandlerParams():ITimelineWrapperQueueSetterAndTriggerer;
 	}

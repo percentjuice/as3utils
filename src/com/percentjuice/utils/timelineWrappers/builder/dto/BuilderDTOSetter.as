@@ -17,36 +17,45 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 
 		public function setProps(to:ITimelineWrapper):void
 		{
-			applyFunction(builderDTO.onCompleteHandler, onUntypedSignalHandler(to.onComplete));
-			applyFunction(builderDTO.onceOnCompleteHandler, onUntypedSignalHandler(to.onComplete));
-			applyFunction(builderDTO.onceOnDestroyHandler, to.onDestroy.addOnce);
-			applyFunction(builderDTO.onCompleteHandlerParams, onUntypedSignalHandlerParams(to.onComplete));
+			applyParam(builderDTO.onCompleteHandler, onHandlerSetter(to.onComplete));
+			applyParam(builderDTO.onceOnCompleteHandler, onHandlerSetter(to.onComplete));
+			applyParam(builderDTO.onceOnDestroyHandler, to.onDestroy.addOnce);
+			applyParams(true, builderDTO.onDestroyHandlerParams, onParamsSetter(to.onDestroy));
+			applyParams(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(to.onComplete));
 
 			to.destroyAfterComplete = builderDTO.destroyAfterComplete;
 		}
 
 		public function setQueueProps(to:ITimelineWrapperQueue):void
 		{
-			applyFunction(builderDTO.queueCompleteHandler, onUntypedSignalHandler(to.queueComplete));
-			applyFunction(builderDTO.onceQueueCompleteHandler, onUntypedSignalHandler(to.queueComplete));
-			applyFunction(builderDTO.queueCompleteHandlerParams, onUntypedSignalHandlerParams(to.queueComplete));
-			applyFunction(builderDTO.playWhenQueueEmptyParams, to.playWhenQueueEmpty);
+			applyParam(builderDTO.queueCompleteHandler, onHandlerSetter(to.queueComplete));
+			applyParam(builderDTO.onceQueueCompleteHandler, onHandlerSetter(to.queueComplete));
+			applyParams(builderDTO.firstQueueCompleteParamIsTimelineWrapper, builderDTO.queueCompleteHandlerParams, onParamsSetter(to.queueComplete));
+			applyParam(builderDTO.playWhenQueueEmptyParams, to.playWhenQueueEmpty);
 		}
 
-		private function applyFunction(from:*, to:Function):void
+		private function applyParam(applyParam:*, to:Function):void
 		{
-			if (from == null)
+			if (applyParam == null)
 				return;
 
-			to(from);
+			to(applyParam);
 		}
 
-		private function onUntypedSignalHandler(to:Signal):Function
+		private function applyParams(applyParam1:*, applyParam2:*, to:Function):void
+		{
+			if (applyParam1 == null || applyParam2 == null)
+				return;
+
+			to(applyParam1, applyParam2);
+		}
+
+		private function onHandlerSetter(to:Signal):Function
 		{
 			return (to as UntypedSignal).setOnDispatchHandler;
 		}
 
-		private function onUntypedSignalHandlerParams(to:Signal):Function
+		private function onParamsSetter(to:Signal):Function
 		{
 			return (to as UntypedSignal).setOnDispatchHandlerParams;
 		}

@@ -15,9 +15,9 @@ package com.percentjuice.utils.timelineWrappers
 		/**
 		 * the DeluxeSignal is set to dispatch any number of parameters to any method set in setOnCompleteHandler.
 		 */
-		public function UntypedSignal()
+		public function UntypedSignal(target:ITimelineWrapper)
 		{
-			super();
+			super(target);
 			strict = false;
 		}
 
@@ -31,9 +31,20 @@ package com.percentjuice.utils.timelineWrappers
 			super.addOnce(handler);
 		}
 
-		public function setOnDispatchHandlerParams(params:Array):void
+		public function setOnDispatchHandlerParams(firstParamIsTarget:Boolean, concatParams:Array = null):void
 		{
-			_onDispatchHandlerParams = params;
+			if (firstParamIsTarget)
+			{
+				_onDispatchHandlerParams = (concatParams == null) ? [target] : [target].concat(concatParams);
+			}
+			else if (concatParams == null)
+			{
+				return;
+			}
+			else
+			{
+				_onDispatchHandlerParams = concatParams;
+			}
 		}
 
 		public function dispatchSetParams():void

@@ -18,7 +18,7 @@ package com.percentjuice.utils.timelineWrappers
 		internal var _wrappedMC:MovieClip;
 		private var _isPlaying:Boolean;
 		private var _onComplete:UntypedSignal;
-		private var _onDestroy:DeluxeSignal;
+		private var _onDestroy:UntypedSignal;
 		private var _destroyAfterComplete:Boolean;
 
 		private var startRequest:Object;
@@ -34,30 +34,39 @@ package com.percentjuice.utils.timelineWrappers
 			assertions = assertions || new Assertions();
 			frameLabelCalculator = frameLabelCalculator || new FrameLabelCalculator();
 
-			_onComplete = new UntypedSignal();
-			_onDestroy = new DeluxeSignal(this);
+			_onComplete = new UntypedSignal(this);
+			_onDestroy = new UntypedSignal(this);
+			_onDestroy.setOnDispatchHandlerParams(true);
 		}
 
 		public function play():void
 		{
+			assertions.assertInstanceIsNotDestroyed(this);
+
 			gotoAndPlayUntilNextLabelOrStop(currentFrame, totalFrames, null);
 		}
 
 		public function gotoAndPlay(frame:Object, scene:String = null):void
 		{
+			assertions.assertInstanceIsNotDestroyed(this);
+			
 			gotoAndPlayUntilNextLabelOrStop(frame, totalFrames, scene);
 		}
 
 		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void
 		{
-			gotoAndPlayUntilNextLabelOrStop(frame, frameLabelCalculator.getFrameBeforeNextLabel(wrappedMC, frame), scene);
+			assertions.assertInstanceIsNotDestroyed(this);
+
+			gotoAndPlayUntilNextLabelOrStop(frame, frameLabelCalculator.getFrameBeforeNextLabel(_wrappedMC, frame), scene);
 		}
 
 		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
 		{
+			assertions.assertInstanceIsNotDestroyed(this);
+
 			if (stopOn is String)
 			{
-				stopOn = frameLabelCalculator.getFrameBeforeNextLabel(wrappedMC, stopOn);
+				stopOn = frameLabelCalculator.getFrameBeforeNextLabel(_wrappedMC, stopOn);
 			}
 
 			gotoAndPlayUntilNextLabelOrStop(frame, stopOn as int, scene);
@@ -66,8 +75,6 @@ package com.percentjuice.utils.timelineWrappers
 		/* kicks off start label || frame & end label || frame */
 		private function gotoAndPlayUntilNextLabelOrStop(frame:Object, stopOn:int, scene:String = null):void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
-
 			startRequest = frame;
 			assertions.assertDoesNotContainNumberAsString([frame, stopOn]);
 
@@ -80,7 +87,7 @@ package com.percentjuice.utils.timelineWrappers
 				_isPlaying = true;
 			}
 
-			wrappedMC.gotoAndStop(frame, scene);
+			_wrappedMC.gotoAndStop(frame, scene);
 
 			if (stopOn > 0)
 			{
@@ -99,18 +106,20 @@ package com.percentjuice.utils.timelineWrappers
 			assertions.assertInstanceIsNotDestroyed(this);
 
 			stop();
-			wrappedMC.gotoAndStop(frame, scene);
+			_wrappedMC.gotoAndStop(frame, scene);
 		}
 
 		public function stop():void
 		{
+			assertions.assertInstanceIsNotDestroyed(this);
+
 			clearCurrentAction();
 			_wrappedMC.stop();
 		}
 
 		private function clearCurrentAction():void
 		{
-			if (wrappedMC.hasEventListener(Event.ENTER_FRAME))
+			if (_wrappedMC.hasEventListener(Event.ENTER_FRAME))
 			{
 				_wrappedMC.removeEventListener(Event.ENTER_FRAME, handleOnEnterFrame);
 			}
@@ -150,14 +159,13 @@ package com.percentjuice.utils.timelineWrappers
 			{
 				stop();
 
-				ifThisNotDecoratedDispatchThis();
-				
+				_onDestroy.dispatchSetParams();
 				_onDestroy.removeAll();
 				_onDestroy = null;
 
 				_onComplete.removeAll();
 				_onComplete = null;
-				
+
 				_wrappedMC = null;
 			}
 		}
@@ -165,11 +173,6 @@ package com.percentjuice.utils.timelineWrappers
 		public function isDestroyed():Boolean
 		{
 			return assertions.isInstanceDestroyed(this);
-		}
-
-		private function ifThisNotDecoratedDispatchThis():void
-		{
-			_onDestroy.dispatch(_onDestroy.target);
 		}
 
 		/**
@@ -194,10 +197,8 @@ package com.percentjuice.utils.timelineWrappers
 			_destroyAfterComplete = value;
 		}
 
-		public function get wrappedMC():MovieClip// TODO: not the place to not allow a null return.  public should be able to read a null instance.
+		public function get wrappedMC():MovieClip
 		{
-			assertions.notNullValue(_wrappedMC);
-
 			return _wrappedMC;
 		}
 
@@ -222,22 +223,22 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function get currentLabel():String
 		{
-			return wrappedMC.currentLabel;
+			return _wrappedMC.currentLabel;
 		}
 
 		public function get currentLabels():Array
 		{
-			return wrappedMC.currentLabels;
+			return _wrappedMC.currentLabels;
 		}
 
 		public function get currentFrame():int
 		{
-			return wrappedMC.currentFrame;
+			return _wrappedMC.currentFrame;
 		}
 
 		public function get totalFrames():int
 		{
-			return wrappedMC.totalFrames;
+			return _wrappedMC.totalFrames;
 		}
 	}
 }

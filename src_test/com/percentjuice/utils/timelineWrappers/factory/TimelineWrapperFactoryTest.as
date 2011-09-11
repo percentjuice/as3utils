@@ -6,6 +6,8 @@ package com.percentjuice.utils.timelineWrappers.factory
 	import org.flexunit.rules.IMethodRule;
 	import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
+	import org.hamcrest.object.isFalse;
+	import org.hamcrest.object.isTrue;
 	import org.mockito.integrations.any;
 	import org.mockito.integrations.flexunit4.MockitoRule;
 	import org.mockito.integrations.given;
@@ -66,8 +68,8 @@ package com.percentjuice.utils.timelineWrappers.factory
 			
 			assertThat(timelineWrapper0, equalTo(timelineWrapper1));
 
-			assertThat(timelineWrapper0.isDestroyed(), equalTo(false));
-			assertThat(timelineWrapperQueue.isDestroyed(), equalTo(true));
+			assertThat(timelineWrapper0.isDestroyed(), isFalse());
+			assertThat(timelineWrapperQueue.isDestroyed(), isTrue());
 		}
 	}
 }

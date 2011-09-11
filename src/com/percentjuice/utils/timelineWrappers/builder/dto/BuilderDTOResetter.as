@@ -15,13 +15,16 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			builderDTO.onCompleteHandler = null;
 			builderDTO.onceOnCompleteHandler = null;
 			builderDTO.onCompleteHandlerParams = null;
+			builderDTO.firstCompleteParamIsTimelineWrapper = false;
 			builderDTO.onceOnDestroyHandler = null;
+			builderDTO.onDestroyHandlerParams = null;
 			builderDTO.destroyAfterComplete = false;
 			builderDTO.queueEnabled = false;
 			builderDTO.playWhenQueueEmptyParams = null;
 			builderDTO.queueCompleteHandler = null;
 			builderDTO.onceQueueCompleteHandler = null;
 			builderDTO.queueCompleteHandlerParams = null;
+			builderDTO.firstQueueCompleteParamIsTimelineWrapper = false;
 			builderDTO.preventRewrapping = false;
 		}
 	}

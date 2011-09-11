@@ -8,33 +8,35 @@ package com.percentjuice.utils.timelineWrappers
 
 	public class UntypedSignalTest
 	{
-		private static const REQUEST:String = "sampleLabelRequest";
+		private static const TEST_PARAM:String = "test_param";
+		
+		private static var timelineWrapper:ITimelineWrapper;
 		private static var signal:UntypedSignal;
 
 		[Before]
 		public function setup():void
 		{
-			signal = new UntypedSignal();
+			signal = new UntypedSignal(timelineWrapper);
 		}
 
 		[Test]
 		public function should_show_that_untyped_signal_dispatches_params():void
 		{
-			signal.setOnceOnDispatchHandler(handleSignalDispatched);
-			signal.setOnDispatchHandlerParams([REQUEST]);
+			signal.setOnceOnDispatchHandler(handleSignalWithParamDispatched);
+			signal.setOnDispatchHandlerParams(false, [TEST_PARAM]);
 			signal.dispatchSetParams();
 		}
 
-		private function handleSignalDispatched(request:String):void
+		private function handleSignalWithParamDispatched(param:String):void
 		{
-			assertThat(REQUEST, equalTo(request));
+			assertThat(TEST_PARAM, equalTo(param));
 		}
 
 		[Test(expects="ArgumentError")]
 		public function should_force_signature_when_param_set():void
 		{
 			signal.setOnceOnDispatchHandler(handleSignalDispatch_emptySignature);
-			signal.setOnDispatchHandlerParams([REQUEST]);
+			signal.setOnDispatchHandlerParams(false, [TEST_PARAM]);
 			assertThat(signal.dispatchSetParams(), throws(allOf(instanceOf(ArgumentError))));
 		}
 
@@ -61,7 +63,7 @@ package com.percentjuice.utils.timelineWrappers
 
 			try
 			{
-				signal.setOnDispatchHandlerParams([REQUEST]);
+				signal.setOnDispatchHandlerParams(false, [TEST_PARAM]);
 				signal.dispatchSetParams();
 			}
 			catch (error:ArgumentError)
@@ -80,6 +82,20 @@ package com.percentjuice.utils.timelineWrappers
 
 		private function handleSignalDispatch_restSignature1(...args):void
 		{
+		}
+		
+		[Test]
+		public function should_dispatch_timelineWrapper_as_first_param():void
+		{
+			signal.setOnceOnDispatchHandler(handleSignalWithParamsDispatched);
+			signal.setOnDispatchHandlerParams(true, [TEST_PARAM]);
+			signal.dispatchSetParams();
+		}
+
+		private function handleSignalWithParamsDispatched(param1:ITimelineWrapper, param2:String):void
+		{
+			assertThat(timelineWrapper, equalTo(param1));
+			assertThat(TEST_PARAM, equalTo(param2));
 		}
 	}
 }

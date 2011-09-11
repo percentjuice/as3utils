@@ -27,7 +27,7 @@ package com.percentjuice.utils.timelineWrappers
 		private function init():void
 		{
 			queueList = [];
-			_queueComplete = new UntypedSignal();
+			_queueComplete = new UntypedSignal(this);
 
 			_timelineWrapper.onComplete.add(handleHitStopPointSignalDispatched);
 			_timelineWrapper.onDestroy.add(handleDestroyed);

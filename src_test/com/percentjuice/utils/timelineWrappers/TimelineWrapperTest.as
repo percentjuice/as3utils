@@ -8,6 +8,7 @@ package com.percentjuice.utils.timelineWrappers
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.hasPropertyWithValue;
 	import org.hamcrest.object.instanceOf;
+	import org.hamcrest.object.isTrue;
 	import org.hamcrest.object.notNullValue;
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
@@ -51,14 +52,14 @@ package com.percentjuice.utils.timelineWrappers
 			playFunctionWithParam(timelineWrapperNoLabels, timelineWrapperNoLabels.play, null);
 		}
 
-		private function playFunctionWithParam(timelineWrapper:ITimelineWrapper, play:Function, params:*):void
+		private function playFunctionWithParam(testObject:ITimelineWrapper, testExecution:Function, params:*):void
 		{
-			handleSignal(this, timelineWrapperNoLabels.onComplete, handleShouldBeAtTotalFrames, 5000, timelineWrapper);
+			handleSignal(this, timelineWrapperNoLabels.onComplete, handleShouldBeAtTotalFrames, 5000, testObject);
 
 			if (params == null)
-				play();
+				testExecution();
 			else
-				play(params);
+				testExecution(params);
 		}
 
 		private function handleShouldBeAtTotalFrames(event:SignalAsyncEvent, timelineWrapper:ITimelineWrapper):void
@@ -156,7 +157,7 @@ package com.percentjuice.utils.timelineWrappers
 
 		public static function should_throw_error_if_used_after_destroy(timelineWrapper:ITimelineWrapper):void
 		{
-			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", Assertions.ATTEMPTED_ACCESS_OF_DESTROYED_INSTANCE))));
+			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", Assertions.ATTEMPTED_OPERATION_ON_DESTROYED_INSTANCE))));
 		}
 
 		[Test]
@@ -164,7 +165,7 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			timelineWrapper.destroy();
 
-			assertThat(timelineWrapper.isDestroyed(), equalTo(true));
+			assertThat(timelineWrapper.isDestroyed(), isTrue());
 			assertThat(movieClip, notNullValue());
 		}
 	}
