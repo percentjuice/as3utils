@@ -38,11 +38,11 @@ package com.percentjuice.utils.timelineWrappers.factory
 			return timelineWrapperQueue;
 		}
 
-		protected override function get timelineClassConverter():TimelineClassConverter
+		protected override function get timelineClassConverter():TimelineWrapperClassConverter
 		{
 			if (_classConverter == null)
 			{
-				_classConverter = new TimelineQueueClassConverter();
+				_classConverter = new TimelineWrapperQueueClassConverter();
 			}
 			return _classConverter;
 		}

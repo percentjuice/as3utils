@@ -44,9 +44,6 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 
 		private function applyParams(applyParam1:*, applyParam2:*, to:Function):void
 		{
-			if (applyParam1 == null || applyParam2 == null)
-				return;
-
 			to(applyParam1, applyParam2);
 		}
 

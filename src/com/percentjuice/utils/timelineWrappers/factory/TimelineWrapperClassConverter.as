@@ -3,9 +3,8 @@ package com.percentjuice.utils.timelineWrappers.factory
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
-	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 
-	public class TimelineClassConverter
+	public class TimelineWrapperClassConverter
 	{
 		protected static const ERROR_NOT_SUPPORTED:String = " is not a supported Class type.";
 
@@ -22,7 +21,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 			{
 				case timelineWrapper is TimelineWrapper:
 					break;
-				case timelineWrapper is TimelineWrapperQueue:
+				case timelineWrapper is ITimelineWrapperQueue:
 					timelineWrapper = (timelineWrapper as ITimelineWrapperQueue).undecorate();
 					break;
 				default:

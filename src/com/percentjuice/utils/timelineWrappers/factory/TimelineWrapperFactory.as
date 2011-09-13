@@ -21,7 +21,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		private static var instance:TimelineWrapperFactory;
 
 		internal static var collectionAccessor:CollectionAccessor;
-		internal var _classConverter:TimelineClassConverter;
+		internal var _classConverter:TimelineWrapperClassConverter;
 
 		public static function getInstance():TimelineWrapperFactory
 		{
@@ -83,11 +83,11 @@ package com.percentjuice.utils.timelineWrappers.factory
 			return timelineWrapper;
 		}
 
-		protected function get timelineClassConverter():TimelineClassConverter
+		protected function get timelineClassConverter():TimelineWrapperClassConverter
 		{
 			if (_classConverter == null)
 			{
-				_classConverter = new TimelineClassConverter();
+				_classConverter = new TimelineWrapperClassConverter();
 			}
 			return _classConverter;
 		}

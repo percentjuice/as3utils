@@ -14,7 +14,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return this;
 		}
 
-		public function addOnCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array):ITimelineWrapperSetter
+		public function addOnCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array = null):ITimelineWrapperSetter
 		{
 			builderDTO.firstCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
 			builderDTO.onCompleteHandlerParams = concatParams;
@@ -84,7 +84,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return this;
 		}
 
-		public function addQueueCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array):ITimelineWrapperQueueSetterAndTriggerer
+		public function addQueueCompleteHandlerParams(firstParamIsTimelineWrapper:Boolean, concatParams:Array = null):ITimelineWrapperQueueSetterAndTriggerer
 		{
 			builderDTO.firstQueueCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
 			builderDTO.queueCompleteHandlerParams = concatParams;

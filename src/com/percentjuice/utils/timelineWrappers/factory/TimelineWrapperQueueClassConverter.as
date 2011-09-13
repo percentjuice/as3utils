@@ -1,10 +1,11 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
+	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 
-	public class TimelineQueueClassConverter extends TimelineClassConverter
+	public class TimelineWrapperQueueClassConverter extends TimelineWrapperClassConverter
 	{
 		protected override function convertInstance(timelineWrapper:ITimelineWrapper):ITimelineWrapper
 		{
@@ -13,7 +14,8 @@ package com.percentjuice.utils.timelineWrappers.factory
 				case timelineWrapper is TimelineWrapper:
 					timelineWrapper = new TimelineWrapperQueue((timelineWrapper as TimelineWrapper));
 					break;
-				case timelineWrapper is TimelineWrapperQueue:
+				case timelineWrapper is ITimelineWrapperQueue:
+					(timelineWrapper as ITimelineWrapperQueue).clearQueue();
 					break;
 				default:
 					throw new ArgumentError(timelineWrapper + ERROR_NOT_SUPPORTED);
