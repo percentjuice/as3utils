@@ -1,7 +1,5 @@
 package com.percentjuice.utils.timelineWrappers
 {
-	import org.osflash.signals.DeluxeSignal;
-
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
@@ -207,7 +205,7 @@ package com.percentjuice.utils.timelineWrappers
 			return _isPlaying;
 		}
 
-		public function get onComplete():DeluxeSignal
+		public function get onComplete():UntypedSignal
 		{
 			return _onComplete;
 		}
@@ -216,7 +214,7 @@ package com.percentjuice.utils.timelineWrappers
 		 * onDestroy handlers must handle this ITimelineWrapper as the handler parameter.
 		 * * ex: onDestroyHandler(dispatcher:ITimelineWrapper)
 		 */
-		public function get onDestroy():DeluxeSignal
+		public function get onDestroy():UntypedSignal
 		{
 			return _onDestroy;
 		}

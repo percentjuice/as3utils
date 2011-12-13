@@ -7,6 +7,11 @@ package com.percentjuice.utils.timelineWrappers.factory
 
 	public class TimelineWrapperQueueClassConverter extends TimelineWrapperClassConverter
 	{
+		public function TimelineWrapperQueueClassConverter(collectionAccessor:CollectionAccessor)
+		{
+			super(collectionAccessor);
+		}
+		
 		protected override function convertInstance(timelineWrapper:ITimelineWrapper):ITimelineWrapper
 		{
 			switch(true)

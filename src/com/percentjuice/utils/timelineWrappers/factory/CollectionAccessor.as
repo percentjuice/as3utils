@@ -5,7 +5,6 @@ package com.percentjuice.utils.timelineWrappers.factory
 
 	import flash.display.MovieClip;
 
-
 	public class CollectionAccessor
 	{
 		internal static const RESET_PERIOD:int = 10;
@@ -99,7 +98,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		private function handleTimelineWrapperDestroy(timelineWrapper:ITimelineWrapper):void
 		{
 			var index:int = referenceCountCollection.indexOf(timelineWrapper);
-			referenceCountCollection[index] = CollectionAccessor.DUMMY_WRAPPER;
+			referenceCountCollection[index] = DUMMY_WRAPPER;
 		}
 
 		public function destroy():void

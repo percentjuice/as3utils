@@ -42,7 +42,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		{
 			if (_classConverter == null)
 			{
-				_classConverter = new TimelineWrapperQueueClassConverter();
+				_classConverter = new TimelineWrapperQueueClassConverter(collectionAccessor);
 			}
 			return _classConverter;
 		}

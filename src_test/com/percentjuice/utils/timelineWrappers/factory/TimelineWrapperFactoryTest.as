@@ -28,7 +28,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		public function setup():void
 		{
 			timelineWrapperFactory = TimelineWrapperFactory.getInstance();
-			TimelineWrapperFactory.collectionAccessor = accessor;
+			timelineWrapperFactory.collectionAccessor = accessor;
 		}
 
 		[After]
@@ -63,7 +63,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 			timelineWrapper0.wrappedMC = movieClip;
 			var timelineWrapperQueue:TimelineWrapperQueue = new TimelineWrapperQueue(timelineWrapper0);
 			
-			given(TimelineWrapperFactory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(timelineWrapperQueue);
+			given(timelineWrapperFactory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(timelineWrapperQueue);
 			var timelineWrapper1:TimelineWrapper = TimelineWrapper(timelineWrapperFactory.getOneWrapperPerMC(movieClip));
 			
 			assertThat(timelineWrapper0, equalTo(timelineWrapper1));

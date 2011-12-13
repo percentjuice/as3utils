@@ -16,7 +16,7 @@
 			{
 				flexUnitCore = new FlexUnitCore();
 				flexUnitCore.addListener(new CIListener());
-				flexUnitCore.run(TimelineWrapperSuite);
+				flexUnitCore.run(TimelineWrapperSuite, TimelineWrapperFactorySuite);
 			}
 		]]>
 	</fx:Script>

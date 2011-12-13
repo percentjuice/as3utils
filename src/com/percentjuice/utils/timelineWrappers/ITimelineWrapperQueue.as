@@ -1,6 +1,5 @@
 package com.percentjuice.utils.timelineWrappers
 {
-	import org.osflash.signals.DeluxeSignal;
 	/**
 	 * @author C Stuempges
 	 */
@@ -12,7 +11,7 @@ package com.percentjuice.utils.timelineWrappers
 		function isQueueEmpty():Boolean;
 		function undecorate():ITimelineWrapper;
 		/* required props */
-		function get queueComplete():DeluxeSignal;
+		function get queueComplete():UntypedSignal;
 	}
 }
 

@@ -47,14 +47,14 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			to(applyParam1, applyParam2);
 		}
 
-		private function onHandlerSetter(to:Signal):Function
+		private function onHandlerSetter(to:UntypedSignal):Function
 		{
-			return (to as UntypedSignal).setOnDispatchHandler;
+			return to.setOnDispatchHandler;
 		}
 
-		private function onParamsSetter(to:Signal):Function
+		private function onParamsSetter(to:UntypedSignal):Function
 		{
-			return (to as UntypedSignal).setOnDispatchHandlerParams;
+			return to.setOnDispatchHandlerParams;
 		}
 	}
 }

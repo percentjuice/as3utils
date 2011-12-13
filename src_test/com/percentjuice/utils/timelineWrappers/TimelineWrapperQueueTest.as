@@ -26,8 +26,8 @@ package com.percentjuice.utils.timelineWrappers
 		[Test(async)]
 		public function should_show_final_frame_is_queued_request():void
 		{
-			handleSignal(this, timelineWrapperQueue.onComplete, handleLabelReached, 3000, [timelineWrapperQueue.onComplete, FrameLabel(mcWithLabels.currentLabels[1]).name]);
-			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 3000, [timelineWrapperQueue.queueComplete, FrameLabel(mcWithLabels.currentLabels[3]).name]);
+			handleSignal(this, timelineWrapperQueue.onComplete, handleLabelReached, 4000, [timelineWrapperQueue.onComplete, FrameLabel(mcWithLabels.currentLabels[1]).name]);
+			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 4000, [timelineWrapperQueue.queueComplete, FrameLabel(mcWithLabels.currentLabels[3]).name]);
 
 			timelineWrapperQueue.gotoAndPlayUntilNextLabel(FrameLabel(mcWithLabels.currentLabels[1]).name);
 			timelineWrapperQueue.playWhenQueueEmpty(FrameLabel(mcWithLabels.currentLabels[3]).name);

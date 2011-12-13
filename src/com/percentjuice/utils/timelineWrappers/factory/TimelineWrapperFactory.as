@@ -20,7 +20,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		private static const SINGLETON_ERROR:String = "Instantiation failed: Use .getInstance() for Singleton instance.";
 		private static var instance:TimelineWrapperFactory;
 
-		internal static var collectionAccessor:CollectionAccessor;
+		internal var collectionAccessor:CollectionAccessor;
 		internal var _classConverter:TimelineWrapperClassConverter;
 
 		public static function getInstance():TimelineWrapperFactory
@@ -38,7 +38,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		{
 			if (allowInstantiation)
 			{
-				collectionAccessor = collectionAccessor || new CollectionAccessor();
+				collectionAccessor = new CollectionAccessor();
 				return;
 			}
 			else
@@ -87,7 +87,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		{
 			if (_classConverter == null)
 			{
-				_classConverter = new TimelineWrapperClassConverter();
+				_classConverter = new TimelineWrapperClassConverter(collectionAccessor);
 			}
 			return _classConverter;
 		}

@@ -1,7 +1,5 @@
 package com.percentjuice.utils.timelineWrappers
 {
-	import org.osflash.signals.DeluxeSignal;
-
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 
@@ -148,7 +146,7 @@ package com.percentjuice.utils.timelineWrappers
 			timelineWrapperQueue.destroyAfterComplete = value;
 		}
 
-		public function get queueComplete():DeluxeSignal
+		public function get queueComplete():UntypedSignal
 		{
 			return timelineWrapperQueue.queueComplete;
 		}
@@ -163,12 +161,12 @@ package com.percentjuice.utils.timelineWrappers
 			return timelineWrapperQueue.isPlaying;
 		}
 
-		public function get onComplete():DeluxeSignal
+		public function get onComplete():UntypedSignal
 		{
 			return timelineWrapperQueue.onComplete;
 		}
 
-		public function get onDestroy():DeluxeSignal
+		public function get onDestroy():UntypedSignal
 		{
 			return timelineWrapperQueue.onDestroy;
 		}

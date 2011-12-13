@@ -1,7 +1,5 @@
 package com.percentjuice.utils.timelineWrappers
 {
-	import org.osflash.signals.DeluxeSignal;
-
 	import flash.display.MovieClip;
 
 	/**
@@ -25,8 +23,8 @@ package com.percentjuice.utils.timelineWrappers
 		function set wrappedMC(wrappedMC:MovieClip):void;
 		/* required props */
 		function get wrappedMC():MovieClip;
-		function get onComplete():DeluxeSignal;
-		function get onDestroy():DeluxeSignal;
+		function get onComplete():UntypedSignal;
+		function get onDestroy():UntypedSignal;
 		function get currentLabel():String;
 		function get currentLabels():Array;
 		function get currentFrame():int;

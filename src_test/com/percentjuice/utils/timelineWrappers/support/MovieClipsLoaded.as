@@ -1,9 +1,9 @@
 package com.percentjuice.utils.timelineWrappers.support
 {
+	import flash.display.MovieClip;
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
-	import flash.display.MovieClip;
 
 	public class MovieClipsLoaded
 	{
@@ -13,7 +13,7 @@ package com.percentjuice.utils.timelineWrappers.support
 		protected static var mcWithoutLabels:MovieClip;
 		protected static var mcWith1Frame:MovieClip;
 
-		private static var mcLoader:MovieClipLoader;
+		private static var mcLoader:EmbeddedMovieClipLoader;
 		
 		[Before(async, order=1)]
 		public function loadAssets():void
@@ -21,8 +21,8 @@ package com.percentjuice.utils.timelineWrappers.support
 			if (loadComplete)
 				return;
 
-			mcLoader = new MovieClipLoader();
-			handleSignal(this, mcLoader.signal_loadComplete, handleMovieWithLabelsLoaded, 5000);
+			mcLoader = new EmbeddedMovieClipLoader();
+			handleSignal(this, mcLoader.loadComplete, handleMovieWithLabelsLoaded, 5000);
 			mcLoader.load(EmbeddedMovieClips.TESTMC_LABELS);
 		}
 
@@ -30,7 +30,7 @@ package com.percentjuice.utils.timelineWrappers.support
 		{
 			mcWithLabels = MovieClip(event.args[1]);
 
-			handleSignal(this, mcLoader.signal_loadComplete, handleMovieWithoutLabelsLoaded, 1000);
+			handleSignal(this, mcLoader.loadComplete, handleMovieWithoutLabelsLoaded, 1000);
 			mcLoader.load(EmbeddedMovieClips.TESTMC_NOLABELS);
 		}
 
@@ -38,7 +38,7 @@ package com.percentjuice.utils.timelineWrappers.support
 		{
 			mcWithoutLabels = MovieClip(event.args[1]);
 
-			handleSignal(this, mcLoader.signal_loadComplete, handleMovieWith1FrameLoaded, 1000);
+			handleSignal(this, mcLoader.loadComplete, handleMovieWith1FrameLoaded, 1000);
 			mcLoader.load(EmbeddedMovieClips.TESTMC_1FRAME);
 		}
 
