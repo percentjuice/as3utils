@@ -46,20 +46,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 		}
 
 		[Test(async)]
-		public function should_set_onDestroyHandler_and_pass_params_on_dispatch():void
-		{
-			builtWrapperDestroy = TimelineWrapperBuilder
-				.initialize()
-				.setWrappedMC(mcWithoutLabels)
-				.setOnceOnDestroyHandler(handleOnDestroyWithParams)
-				.concatParamsToTimelineWrapper(TEST_PARAMS)
-				.build();
-
-			handleSignal(this, builtWrapperDestroy.onDestroy, handleDispatchWithDelayedFunctionCall, 1000, testThatSetParamsEqualDispatchedParams);
-			builtWrapperDestroy.destroy();
-		}
-
-		[Test(async)]
 		public function should_set_onCompleteHandler_and_pass_params_on_dispatch():void
 		{
 			var builtWrapper:ITimelineWrapper = TimelineWrapperBuilder
@@ -77,7 +63,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 		{
 			var testFunction:Function = passThroughData as Function;
 
-			setTimeout(testFunction, 100);
+			setTimeout(testFunction, 500);
 		}
 
 		private function testThatSetParamsEqualDispatchedParams():void
@@ -87,12 +73,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		private function handleOnCompleteWithParams(param1:String, param2:int, param3:int):void
 		{
-			test_results = [param1, param2, param3];
-		}
-
-		private function handleOnDestroyWithParams(param0:ITimelineWrapper, param1:String, param2:int, param3:int):void
-		{
-			assertThat(param0, equalTo(builtWrapperDestroy));
 			test_results = [param1, param2, param3];
 		}
 

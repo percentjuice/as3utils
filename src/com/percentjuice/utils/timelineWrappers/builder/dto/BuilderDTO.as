@@ -10,8 +10,6 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 		public var onCompleteHandlerParams:Array;
 		public var firstCompleteParamIsTimelineWrapper:Boolean;
 		
-		public var onceOnDestroyHandler:Function;
-		public var onDestroyHandlerParams:Array;
 		public var destroyAfterComplete:Boolean;
 		
 		public var queueEnabled:Boolean;

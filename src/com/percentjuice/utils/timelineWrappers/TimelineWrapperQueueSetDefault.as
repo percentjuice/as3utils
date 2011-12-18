@@ -1,5 +1,7 @@
 package com.percentjuice.utils.timelineWrappers
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
+
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 
@@ -11,7 +13,10 @@ package com.percentjuice.utils.timelineWrappers
 	 */
 	public class TimelineWrapperQueueSetDefault implements ITimelineWrapper, ITimelineWrapperQueue, ITimelineWrapperQueueSetDefault
 	{
+		use namespace pj_as3utils_namespace;
+
 		private var _timelineWrapperQueue:TimelineWrapperQueue;
+		
 		private var defaultAnim:Object = new String();
 
 		public function TimelineWrapperQueueSetDefault(timelineWrapperQueue:TimelineWrapperQueue)
@@ -22,7 +27,7 @@ package com.percentjuice.utils.timelineWrappers
 
 		private function init():void
 		{
-			_timelineWrapperQueue.queueComplete.add(handleQueueComplete);
+			_timelineWrapperQueue.queueCompleteInternal.add(handleQueueComplete);
 			_timelineWrapperQueue.onDestroy.target = this;
 		}
 
@@ -67,7 +72,7 @@ package com.percentjuice.utils.timelineWrappers
 		public function removeDefaultAnim():void
 		{
 			defaultAnim = null;
-			timelineWrapperQueue.queueComplete.remove(playDefaultAnim);
+			timelineWrapperQueue.queueCompleteInternal.remove(playDefaultAnim);
 		}
 
 		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
@@ -130,7 +135,7 @@ package com.percentjuice.utils.timelineWrappers
 		public function undecorate():ITimelineWrapper
 		{
 			defaultAnim = null;
-			
+
 			var undecorated:ITimelineWrapper = _timelineWrapperQueue;
 			_timelineWrapperQueue = null;
 			return undecorated;
@@ -166,7 +171,7 @@ package com.percentjuice.utils.timelineWrappers
 			return timelineWrapperQueue.onComplete;
 		}
 
-		public function get onDestroy():UntypedSignal
+		pj_as3utils_namespace function get onDestroy():UntypedSignal
 		{
 			return timelineWrapperQueue.onDestroy;
 		}
@@ -195,7 +200,7 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			if (isDestroyed())
 				throw new IllegalOperationError("cannot perform function since instance was destroyed or undecorated.");
-				
+
 			return _timelineWrapperQueue;
 		}
 	}

@@ -1,5 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
@@ -16,6 +17,8 @@ package com.percentjuice.utils.timelineWrappers.factory
 	 */
 	public class TimelineWrapperQueueFactory extends TimelineWrapperFactory
 	{
+		use namespace pj_as3utils_namespace;
+
 		private static var instance:TimelineWrapperQueueFactory;
 
 		public static function getInstance():TimelineWrapperQueueFactory

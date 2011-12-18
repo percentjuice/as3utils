@@ -1,5 +1,7 @@
 package com.percentjuice.utils.timelineWrappers
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
+
 	import org.osflash.signals.DeluxeSignal;
 
 	/**
@@ -10,7 +12,9 @@ package com.percentjuice.utils.timelineWrappers
 	 */
 	public class UntypedSignal extends DeluxeSignal
 	{
-		private var _onDispatchHandlerParams:Array;
+		use namespace pj_as3utils_namespace;
+
+		private var onDispatchHandlerParams:Array;
 
 		/**
 		 * the DeluxeSignal is set to dispatch any number of parameters to any method set in setOnCompleteHandler.
@@ -35,7 +39,7 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			if (firstParamIsTarget)
 			{
-				_onDispatchHandlerParams = (concatParams == null) ? [target] : [target].concat(concatParams);
+				onDispatchHandlerParams = (concatParams == null) ? [target] : [target].concat(concatParams);
 			}
 			else if (concatParams == null)
 			{
@@ -43,25 +47,20 @@ package com.percentjuice.utils.timelineWrappers
 			}
 			else
 			{
-				_onDispatchHandlerParams = concatParams;
+				onDispatchHandlerParams = concatParams;
 			}
 		}
 
 		public function dispatchSetParams():void
 		{
-			if (_onDispatchHandlerParams == null)
+			if (onDispatchHandlerParams == null)
 			{
 				super.dispatch.apply();
 			}
 			else
 			{
-				super.dispatch.apply(undefined, _onDispatchHandlerParams);
+				super.dispatch.apply(undefined, onDispatchHandlerParams);
 			}
-		}
-
-		internal function get onDispatchHandlerParams():Array
-		{
-			return _onDispatchHandlerParams;
 		}
 	}
 }

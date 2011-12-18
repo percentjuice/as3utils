@@ -4,8 +4,6 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.UntypedSignal;
 
-	import org.osflash.signals.Signal;
-
 	public class BuilderDTOSetter
 	{
 		private var builderDTO:BuilderDTO;
@@ -19,8 +17,6 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 		{
 			applyParam(builderDTO.onCompleteHandler, onHandlerSetter(to.onComplete));
 			applyParam(builderDTO.onceOnCompleteHandler, onHandlerSetter(to.onComplete));
-			applyParam(builderDTO.onceOnDestroyHandler, to.onDestroy.addOnce);
-			applyParams(true, builderDTO.onDestroyHandlerParams, onParamsSetter(to.onDestroy));
 			applyParams(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(to.onComplete));
 
 			to.destroyAfterComplete = builderDTO.destroyAfterComplete;

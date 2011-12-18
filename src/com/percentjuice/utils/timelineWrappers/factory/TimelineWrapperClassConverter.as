@@ -1,11 +1,14 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 
 	public class TimelineWrapperClassConverter
 	{
+		use namespace pj_as3utils_namespace;
+
 		protected static const ERROR_NOT_SUPPORTED:String = " is not a supported Class type.";
 		protected var collectionAccessor:CollectionAccessor;
 

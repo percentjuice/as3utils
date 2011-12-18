@@ -1,5 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 
@@ -15,13 +16,15 @@ package com.percentjuice.utils.timelineWrappers.factory
 	 */
 	public class TimelineWrapperFactory
 	{
+		use namespace pj_as3utils_namespace;
+
 		protected static var allowInstantiation:Boolean;
 
 		private static const SINGLETON_ERROR:String = "Instantiation failed: Use .getInstance() for Singleton instance.";
 		private static var instance:TimelineWrapperFactory;
 
-		internal var collectionAccessor:CollectionAccessor;
-		internal var _classConverter:TimelineWrapperClassConverter;
+		pj_as3utils_namespace var collectionAccessor:CollectionAccessor;
+		pj_as3utils_namespace var _classConverter:TimelineWrapperClassConverter;
 
 		public static function getInstance():TimelineWrapperFactory
 		{

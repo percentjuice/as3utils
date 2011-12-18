@@ -1,5 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 
@@ -15,6 +16,8 @@ package com.percentjuice.utils.timelineWrappers.factory
 
 	public class TimelineWrapperQueueFactoryTest
 	{
+		use namespace pj_as3utils_namespace;
+
 		[Rule]
 		public var mockitoRule:IMethodRule = new MockitoRule();
 

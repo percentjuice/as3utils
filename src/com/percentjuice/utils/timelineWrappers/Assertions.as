@@ -1,32 +1,40 @@
 package com.percentjuice.utils.timelineWrappers
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
+
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 
 	public class Assertions
 	{
+		use namespace pj_as3utils_namespace;
+
 		public static const ATTEMPTED_OPERATION_ON_DESTROYED_INSTANCE:String = "Cannot call method on destroyed TimelineWrapper.";
 		public static const ATTEMPTED_INITIALIZATION_WITH_NULL_MOVIECLIP:String = "Attempted initialization with a null MovieClip.";
 		public static const ATTEMPTED_GOTO_WITH_NUMBER_AS_STRING:String = "] this String Request will be run by flash.display.MovieClip::gotoAndStop as a Number.  instead pass in a Number or rename your frame label.";
 
-		internal function notNullValue(wrappedMC:MovieClip):void
+		pj_as3utils_namespace function notNullValue(wrappedMC:MovieClip):void
 		{
 			if (wrappedMC == null)
+			{
 				throw new ArgumentError(ATTEMPTED_INITIALIZATION_WITH_NULL_MOVIECLIP);
+			}
 		}
 
-		internal function isInstanceDestroyed(instance:TimelineWrapper):Boolean
+		pj_as3utils_namespace function isInstanceDestroyed(instance:TimelineWrapper):Boolean
 		{
 			return instance._wrappedMC == null;
 		}
 
-		internal function assertInstanceIsNotDestroyed(instance:TimelineWrapper):void
+		pj_as3utils_namespace function assertInstanceIsNotDestroyed(instance:TimelineWrapper):void
 		{
 			if (isInstanceDestroyed(instance) == true)
+			{
 				throw new IllegalOperationError(ATTEMPTED_OPERATION_ON_DESTROYED_INSTANCE);
+			}
 		}
 
-		internal function assertDoesNotContainNumberAsString(requests:Array):void
+		pj_as3utils_namespace function assertDoesNotContainNumberAsString(requests:Array):void
 		{
 			for each (var request:Object in requests)
 			{
@@ -38,5 +46,3 @@ package com.percentjuice.utils.timelineWrappers
 		}
 	}
 }
-
-

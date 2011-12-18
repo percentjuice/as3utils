@@ -1,8 +1,8 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
-	import flash.display.MovieClip;
-	import flash.errors.IllegalOperationError;
+
 	import org.hamcrest.assertThat;
 	import org.hamcrest.core.allOf;
 	import org.hamcrest.core.not;
@@ -12,8 +12,13 @@ package com.percentjuice.utils.timelineWrappers.factory
 	import org.mockito.integrations.any;
 	import org.mockito.integrations.given;
 
+	import flash.display.MovieClip;
+	import flash.errors.IllegalOperationError;
+
 	public class TimelineWrapperFactoryTestRunner
 	{
+		use namespace pj_as3utils_namespace;
+
 		public static function should_return_correct_instance_type(classRequired:Class, factory:TimelineWrapperFactory):void
 		{
 			given(factory.collectionAccessor.getAnyMatchingITimelineWrapper(any())).willReturn(CollectionAccessor.DUMMY_WRAPPER);

@@ -1,5 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.DummyTimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 
@@ -7,10 +8,12 @@ package com.percentjuice.utils.timelineWrappers.factory
 
 	public class CollectionAccessor
 	{
-		internal static const RESET_PERIOD:int = 10;
-		internal static const DUMMY_WRAPPER:ITimelineWrapper = new DummyTimelineWrapper();
+		use namespace pj_as3utils_namespace;
 
-		internal var referenceCountCollection:Vector.<ITimelineWrapper>;
+		pj_as3utils_namespace static const DUMMY_WRAPPER:ITimelineWrapper = new DummyTimelineWrapper();
+		pj_as3utils_namespace static const RESET_PERIOD:int = 10;
+
+		pj_as3utils_namespace var referenceCountCollection:Vector.<ITimelineWrapper>;
 
 		private var i:int;
 		private var l:int;
@@ -91,7 +94,7 @@ package com.percentjuice.utils.timelineWrappers.factory
 		 */
 		public function addToWatchList(timelineWrapper:ITimelineWrapper):void
 		{
-			timelineWrapper.onDestroy.addOnce(handleTimelineWrapperDestroy);
+			(timelineWrapper as Object).onDestroy.addOnce(handleTimelineWrapperDestroy);
 			referenceCountCollection[referenceCountCollection.length] = timelineWrapper;
 		}
 

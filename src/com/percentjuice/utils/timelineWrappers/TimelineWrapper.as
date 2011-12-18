@@ -1,22 +1,31 @@
 package com.percentjuice.utils.timelineWrappers
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
+
+	import org.osflash.signals.Signal;
+
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 
 	/**
-	 * Wraps labelled MovieClips to assist Timeline Animation management.
+	 * Wraps labelled MovieClips to assist Timeline Animation.
+	 * 
 	 * @author C Stuempges
 	 */
 	public class TimelineWrapper implements ITimelineWrapper
 	{
-		internal static var assertions:Assertions;
+		use namespace pj_as3utils_namespace;
+
+		private static var assertions:Assertions;
 		private static var frameLabelCalculator:FrameLabelCalculator;
 
-		internal var _wrappedMC:MovieClip;
+		pj_as3utils_namespace var onDestroy:UntypedSignal;
+		pj_as3utils_namespace var _wrappedMC:MovieClip;
+		pj_as3utils_namespace var onCompleteInternal:Signal;
+
 		private var _isPlaying:Boolean;
 		private var _onComplete:UntypedSignal;
-		private var _onDestroy:UntypedSignal;
 		private var _destroyAfterComplete:Boolean;
 
 		private var startRequest:Object;
@@ -33,8 +42,9 @@ package com.percentjuice.utils.timelineWrappers
 			frameLabelCalculator = frameLabelCalculator || new FrameLabelCalculator();
 
 			_onComplete = new UntypedSignal(this);
-			_onDestroy = new UntypedSignal(this);
-			_onDestroy.setOnDispatchHandlerParams(true);
+			onDestroy = new UntypedSignal(this);
+			onDestroy.setOnDispatchHandlerParams(true);
+			onCompleteInternal = new Signal();
 		}
 
 		public function play():void
@@ -47,7 +57,7 @@ package com.percentjuice.utils.timelineWrappers
 		public function gotoAndPlay(frame:Object, scene:String = null):void
 		{
 			assertions.assertInstanceIsNotDestroyed(this);
-			
+
 			gotoAndPlayUntilNextLabelOrStop(frame, totalFrames, scene);
 		}
 
@@ -142,6 +152,7 @@ package com.percentjuice.utils.timelineWrappers
 			clearCurrentAction();
 
 			_onComplete.dispatchSetParams();
+			onCompleteInternal.dispatch();
 
 			if (_destroyAfterComplete)
 				destroy();
@@ -157,12 +168,16 @@ package com.percentjuice.utils.timelineWrappers
 			{
 				stop();
 
-				_onDestroy.dispatchSetParams();
-				_onDestroy.removeAll();
-				_onDestroy = null;
+				onDestroy.dispatchSetParams();
+				// TODO: use typed signal
+				onDestroy.removeAll();
+				onDestroy = null;
 
 				_onComplete.removeAll();
 				_onComplete = null;
+
+				onCompleteInternal.removeAll();
+				onCompleteInternal = null;
 
 				_wrappedMC = null;
 			}
@@ -208,15 +223,6 @@ package com.percentjuice.utils.timelineWrappers
 		public function get onComplete():UntypedSignal
 		{
 			return _onComplete;
-		}
-
-		/**
-		 * onDestroy handlers must handle this ITimelineWrapper as the handler parameter.
-		 * * ex: onDestroyHandler(dispatcher:ITimelineWrapper)
-		 */
-		public function get onDestroy():UntypedSignal
-		{
-			return _onDestroy;
 		}
 
 		public function get currentLabel():String

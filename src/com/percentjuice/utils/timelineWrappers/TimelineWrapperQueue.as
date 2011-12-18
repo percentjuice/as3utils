@@ -1,5 +1,9 @@
 package com.percentjuice.utils.timelineWrappers
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
+
+	import org.osflash.signals.Signal;
+
 	import flash.display.MovieClip;
 	import flash.errors.IllegalOperationError;
 
@@ -11,8 +15,13 @@ package com.percentjuice.utils.timelineWrappers
 	 */
 	public class TimelineWrapperQueue implements ITimelineWrapper, ITimelineWrapperQueue
 	{
+		use namespace pj_as3utils_namespace;
+	
+		pj_as3utils_namespace var queueCompleteInternal:Signal;
+		
 		private var _timelineWrapper:TimelineWrapper;
 		private var _queueComplete:UntypedSignal;
+		
 		private var queueList:Array;
 
 		public function TimelineWrapperQueue(timelineWrapper:TimelineWrapper)
@@ -25,8 +34,9 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			queueList = [];
 			_queueComplete = new UntypedSignal(this);
+			queueCompleteInternal = new Signal();
 
-			_timelineWrapper.onComplete.add(handleHitStopPointSignalDispatched);
+			_timelineWrapper.onCompleteInternal.add(handleHitStopPointSignalDispatched);
 			_timelineWrapper.onDestroy.add(handleDestroyed);
 			_timelineWrapper.onDestroy.target = this;
 		}
@@ -40,6 +50,7 @@ package com.percentjuice.utils.timelineWrappers
 			else
 			{
 				queueComplete.dispatch();
+				queueCompleteInternal.dispatch();
 			}
 		}
 
@@ -107,12 +118,14 @@ package com.percentjuice.utils.timelineWrappers
 
 		private function handleDestroyed(timelineWrapper:ITimelineWrapper):void
 		{
-			timelineWrapper.onComplete.remove(handleHitStopPointSignalDispatched);
-			timelineWrapper.onDestroy.remove(handleDestroyed);
+			_timelineWrapper.onCompleteInternal.remove(handleHitStopPointSignalDispatched);
+			_timelineWrapper.onDestroy.remove(handleDestroyed);
 
 			clearQueue();
 			_queueComplete.removeAll();
 			_queueComplete = null;
+			queueCompleteInternal.removeAll();
+			queueCompleteInternal = null;
 		}
 
 		public function undecorate():ITimelineWrapper
@@ -160,7 +173,7 @@ package com.percentjuice.utils.timelineWrappers
 			return timelineWrapper.onComplete;
 		}
 
-		public function get onDestroy():UntypedSignal
+		pj_as3utils_namespace function get onDestroy():UntypedSignal
 		{
 			return timelineWrapper.onDestroy;
 		}

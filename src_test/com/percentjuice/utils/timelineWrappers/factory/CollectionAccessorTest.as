@@ -1,8 +1,9 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
+	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
-	import flash.display.MovieClip;
+
 	import org.hamcrest.assertThat;
 	import org.hamcrest.collection.arrayWithSize;
 	import org.hamcrest.collection.everyItem;
@@ -11,10 +12,12 @@ package com.percentjuice.utils.timelineWrappers.factory
 	import org.hamcrest.core.not;
 	import org.hamcrest.object.equalTo;
 
-
+	import flash.display.MovieClip;
 
 	public class CollectionAccessorTest
 	{
+		use namespace pj_as3utils_namespace;
+
 		private var collectionAccessor:CollectionAccessor;
 
 		private var wrapper0:ITimelineWrapper;

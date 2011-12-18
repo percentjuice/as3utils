@@ -1,6 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	public class TimelineWrapperSetter extends TimelineWrapperTriggerer implements ITimelineWrapperSetter, ITimelineWrapperCompleteHandlerParams, ITimelineWrapperQueueSetterAndTriggerer, ITimelineWrapperQueueSetterHandlerParams, ITimelineWrapperDestroyHandlerParams
+	public class TimelineWrapperSetter extends TimelineWrapperTriggerer implements ITimelineWrapperSetter, ITimelineWrapperCompleteHandlerParams, ITimelineWrapperQueueSetterAndTriggerer, ITimelineWrapperQueueSetterHandlerParams
 	{
 		public function setOnCompleteHandler(handler:Function):ITimelineWrapperCompleteHandlerParams
 		{
@@ -23,18 +23,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		public function noOnCompleteHandlerParams():ITimelineWrapperSetter
 		{
-			return this;
-		}
-
-		public function setOnceOnDestroyHandler(handler:Function):ITimelineWrapperDestroyHandlerParams
-		{
-			builderDTO.onceOnDestroyHandler = handler;
-			return this;
-		}
-
-		public function concatParamsToTimelineWrapper(concatParams:Array):ITimelineWrapperSetter
-		{
-			builderDTO.onDestroyHandlerParams = concatParams;
 			return this;
 		}
 		

@@ -24,7 +24,6 @@ package com.percentjuice.utils.timelineWrappers
 		/* required props */
 		function get wrappedMC():MovieClip;
 		function get onComplete():UntypedSignal;
-		function get onDestroy():UntypedSignal;
 		function get currentLabel():String;
 		function get currentLabels():Array;
 		function get currentFrame():int;

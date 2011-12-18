@@ -6,8 +6,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		function setOnceOnCompleteHandler(handler:Function):ITimelineWrapperCompleteHandlerParams;
 
-		function setOnceOnDestroyHandler(handler:Function):ITimelineWrapperDestroyHandlerParams;
-
 		function setDestroyAfterComplete():ITimelineWrapperSetter;
 		
 		function setRewrappingPrevention():ITimelineWrapperSetter;
