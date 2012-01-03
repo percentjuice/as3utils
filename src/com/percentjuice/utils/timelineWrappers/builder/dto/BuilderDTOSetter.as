@@ -1,7 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.builder.dto
 {
-	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
-	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
+	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueueSetDefault;
 	import com.percentjuice.utils.timelineWrappers.UntypedSignal;
 
 	public class BuilderDTOSetter
@@ -13,21 +12,19 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			this.builderDTO = builderDTO;
 		}
 
-		public function setProps(to:ITimelineWrapper):void
+		public function setProps(to:ITimelineWrapperQueueSetDefault):void
 		{
+			to.destroyAfterComplete = builderDTO.destroyAfterComplete;
+
 			applyParam(builderDTO.onCompleteHandler, onHandlerSetter(to.onComplete));
 			applyParam(builderDTO.onceOnCompleteHandler, onHandlerSetter(to.onComplete));
-			applyParams(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(to.onComplete));
-
-			to.destroyAfterComplete = builderDTO.destroyAfterComplete;
-		}
-
-		public function setQueueProps(to:ITimelineWrapperQueue):void
-		{
+			applyParam(builderDTO.defaultAnim, to.setDefaultAnim);
 			applyParam(builderDTO.queueCompleteHandler, onHandlerSetter(to.queueComplete));
 			applyParam(builderDTO.onceQueueCompleteHandler, onHandlerSetter(to.queueComplete));
-			applyParams(builderDTO.firstQueueCompleteParamIsTimelineWrapper, builderDTO.queueCompleteHandlerParams, onParamsSetter(to.queueComplete));
 			applyParam(builderDTO.playWhenQueueEmptyParams, to.playWhenQueueEmpty);
+
+			applyParams(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(to.onComplete));
+			applyParams(builderDTO.firstQueueCompleteParamIsTimelineWrapper, builderDTO.queueCompleteHandlerParams, onParamsSetter(to.queueComplete));
 		}
 
 		private function applyParam(applyParam:*, to:Function):void

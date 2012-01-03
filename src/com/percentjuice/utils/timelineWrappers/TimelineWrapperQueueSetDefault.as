@@ -16,7 +16,7 @@ package com.percentjuice.utils.timelineWrappers
 		use namespace pj_as3utils_namespace;
 
 		private var _timelineWrapperQueue:TimelineWrapperQueue;
-		
+
 		private var defaultAnim:Object = new String();
 
 		public function TimelineWrapperQueueSetDefault(timelineWrapperQueue:TimelineWrapperQueue)
@@ -27,11 +27,18 @@ package com.percentjuice.utils.timelineWrappers
 
 		private function init():void
 		{
-			_timelineWrapperQueue.queueCompleteInternal.add(handleQueueComplete);
-			_timelineWrapperQueue.onDestroy.target = this;
+			_timelineWrapperQueue.queueCompleteInternal.add(handleQueueCompleteInternalDispatched);
+			_timelineWrapperQueue.onDestroy.setOnceOnDispatchHandler(handleDestroyed);
+			_timelineWrapperQueue.onDestroy.setOnDispatchHandlerParams(false, [this]);
 		}
 
-		private function handleQueueComplete(...args):void
+		private function handleDestroyed(timelineWrapper:ITimelineWrapperQueueSetDefault):void
+		{
+			defaultAnim = null;
+			_timelineWrapperQueue = null;
+		}
+
+		private function handleQueueCompleteInternalDispatched():void
 		{
 			playDefaultAnim();
 		}
@@ -128,16 +135,16 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function destroy():void
 		{
-			defaultAnim = null;
 			timelineWrapperQueue.destroy();
 		}
 
 		public function undecorate():ITimelineWrapper
 		{
-			defaultAnim = null;
-
 			var undecorated:ITimelineWrapper = _timelineWrapperQueue;
-			_timelineWrapperQueue = null;
+
+			if (!isDestroyed())
+				handleDestroyed(this);
+
 			return undecorated;
 		}
 

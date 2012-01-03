@@ -2,8 +2,10 @@ package com.percentjuice.utils.timelineWrappers.factory
 {
 	import com.percentjuice.utils.pj_as3utils_namespace;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
+	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
+	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueueSetDefault;
 
 	public class TimelineWrapperClassConverter
 	{
@@ -32,15 +34,21 @@ package com.percentjuice.utils.timelineWrappers.factory
 					return timelineWrapper;
 					break;
 				case timelineWrapper is TimelineWrapperQueue:
-					var decorated:ITimelineWrapper = (timelineWrapper as TimelineWrapperQueue).undecorate();
-					timelineWrapper = CollectionAccessor.DUMMY_WRAPPER;
-					collectionAccessor.addToWatchList(decorated);
-					return decorated;
+				case timelineWrapper is TimelineWrapperQueueSetDefault:
+					return getDecoratedFrom(timelineWrapper);
 					break;
 				default:
 					throw new ArgumentError(timelineWrapper + ERROR_NOT_SUPPORTED);
 			}
 			return null;
+		}
+
+		private function getDecoratedFrom(timelineWrapper:ITimelineWrapper):ITimelineWrapper
+		{
+			var decorated:ITimelineWrapper = ITimelineWrapperQueue(timelineWrapper).undecorate();
+			timelineWrapper = CollectionAccessor.DUMMY_WRAPPER;
+			collectionAccessor.addToWatchList(decorated);
+			return decorated;
 		}
 	}
 }

@@ -5,7 +5,6 @@ package com.percentjuice.utils.timelineWrappers
 	import org.osflash.signals.Signal;
 
 	import flash.display.MovieClip;
-	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 
 	/**
@@ -17,18 +16,19 @@ package com.percentjuice.utils.timelineWrappers
 	{
 		use namespace pj_as3utils_namespace;
 
+		pj_as3utils_namespace static var nullMovieClip:MovieClip;
+		
 		private static var assertions:Assertions;
 		private static var frameLabelCalculator:FrameLabelCalculator;
 
 		pj_as3utils_namespace var onDestroy:UntypedSignal;
-		pj_as3utils_namespace var _wrappedMC:MovieClip;
 		pj_as3utils_namespace var onCompleteInternal:Signal;
 
+		private var _wrappedMC:MovieClip;
 		private var _isPlaying:Boolean;
 		private var _onComplete:UntypedSignal;
 		private var _destroyAfterComplete:Boolean;
 
-		private var startRequest:Object;
 		private var stopOnFrame:int;
 
 		public function TimelineWrapper()
@@ -49,28 +49,28 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function play():void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
+			assertions.assertWrappedIsNotNull(this);
 
 			gotoAndPlayUntilNextLabelOrStop(currentFrame, totalFrames, null);
 		}
 
 		public function gotoAndPlay(frame:Object, scene:String = null):void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
+			assertions.assertWrappedIsNotNull(this);
 
 			gotoAndPlayUntilNextLabelOrStop(frame, totalFrames, scene);
 		}
 
 		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
+			assertions.assertWrappedIsNotNull(this);
 
 			gotoAndPlayUntilNextLabelOrStop(frame, frameLabelCalculator.getFrameBeforeNextLabel(_wrappedMC, frame), scene);
 		}
 
 		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
+			assertions.assertWrappedIsNotNull(this);
 
 			if (stopOn is String)
 			{
@@ -83,35 +83,26 @@ package com.percentjuice.utils.timelineWrappers
 		/* kicks off start label || frame & end label || frame */
 		private function gotoAndPlayUntilNextLabelOrStop(frame:Object, stopOn:int, scene:String = null):void
 		{
-			startRequest = frame;
 			assertions.assertDoesNotContainNumberAsString([frame, stopOn]);
 
 			if (_isPlaying)
 			{
 				stop();
 			}
-			else
-			{
-				_isPlaying = true;
-			}
+
+			_isPlaying = true;
 
 			_wrappedMC.gotoAndStop(frame, scene);
 
-			if (stopOn > 0)
-			{
+			if (assertions.isValidFrame(stopOn))
 				stopOnFrame = stopOn;
-			}
-			else
-			{
-				throw new IllegalOperationError("Not a settable Stop Frame: " + stopOn);
-			}
 
 			_wrappedMC.addEventListener(Event.ENTER_FRAME, handleOnEnterFrame);
 		}
 
 		public function gotoAndStop(frame:Object, scene:String = null):void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
+			assertions.assertWrappedIsNotNull(this);
 
 			stop();
 			_wrappedMC.gotoAndStop(frame, scene);
@@ -119,7 +110,7 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function stop():void
 		{
-			assertions.assertInstanceIsNotDestroyed(this);
+			assertions.assertWrappedIsNotNull(this);
 
 			clearCurrentAction();
 			_wrappedMC.stop();
@@ -131,6 +122,7 @@ package com.percentjuice.utils.timelineWrappers
 			{
 				_wrappedMC.removeEventListener(Event.ENTER_FRAME, handleOnEnterFrame);
 			}
+
 			_isPlaying = false;
 			stopOnFrame = 0;
 		}
@@ -169,7 +161,6 @@ package com.percentjuice.utils.timelineWrappers
 				stop();
 
 				onDestroy.dispatchSetParams();
-				// TODO: use typed signal
 				onDestroy.removeAll();
 				onDestroy = null;
 
@@ -179,7 +170,7 @@ package com.percentjuice.utils.timelineWrappers
 				onCompleteInternal.removeAll();
 				onCompleteInternal = null;
 
-				_wrappedMC = null;
+				_wrappedMC = nullMovieClip;
 			}
 		}
 

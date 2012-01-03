@@ -1,18 +1,20 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	import com.percentjuice.utils.timelineWrappers.DummyTimelineWrapper;
+	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
+	import com.percentjuice.utils.pj_as3utils_namespace;
+	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueueSetDefault;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
+	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueueSetDefault;
 	import com.percentjuice.utils.timelineWrappers.builder.dto.*;
-	import com.percentjuice.utils.timelineWrappers.factory.TimelineWrapperFactory;
-	import com.percentjuice.utils.timelineWrappers.factory.TimelineWrapperQueueFactory;
+	import com.percentjuice.utils.timelineWrappers.factory.TimelineWrapperQueueSetDefaultFactory;
 
 	public class TimelineWrapperCompleteBuilder implements ITimelineWrapperCompleteBuilder
 	{
 		protected static var builderDTO:BuilderDTO;
-		protected static var nullTimelineWrapper:DummyTimelineWrapper;
-		protected var _timelineWrapper:ITimelineWrapper;
+		protected static var nullTimelineWrapper:ITimelineWrapperQueueSetDefault;
+		protected var _timelineWrapper:ITimelineWrapperQueueSetDefault;
 
 		private static var builderDTOResetter:BuilderDTOResetter;
 		private static var builderDTOSetter:BuilderDTOSetter;
@@ -24,48 +26,43 @@ package com.percentjuice.utils.timelineWrappers.builder
 			builderDTOSetter = new BuilderDTOSetter(builderDTO);
 		}
 
-		public function build():ITimelineWrapper
+		public function build():ITimelineWrapperQueueSetDefault
 		{
 			builderDTOSetter.setProps(timelineWrapper);
-			if (builderDTO.queueEnabled)
-			{
-				builderDTOSetter.setQueueProps(timelineWrapper as TimelineWrapperQueue);
-			}
-
 			builderDTOResetter.reset();
 
 			return _timelineWrapper;
 		}
 
-		protected function get timelineWrapper():ITimelineWrapper
+		protected function get timelineWrapper():ITimelineWrapperQueueSetDefault
 		{
 			if (_timelineWrapper == nullTimelineWrapper)
 			{
-				createTimelineWrapperPerSettings();
+				createTimelineWrapperPerRewrapSetting();
 			}
 			return _timelineWrapper;
 		}
 
-		private function createTimelineWrapperPerSettings():void
+		private function createTimelineWrapperPerRewrapSetting():void
 		{
 			if (builderDTO.preventRewrapping)
 			{
-				createTimelineWrapperFromFactory(builderDTO.queueEnabled);
+				createTimelineWrapperFromFactory();
 			}
 			else
 			{
-				createTimelineWrapper(builderDTO.queueEnabled);
+				createTimelineWrapper();
 			}
 		}
 
-		private function createTimelineWrapperFromFactory(queueEnabled:Boolean):void
+		private function createTimelineWrapperFromFactory():void
 		{
-			_timelineWrapper = (queueEnabled) ? TimelineWrapperQueueFactory.getInstance().getOneWrapperPerMC(builderDTO.wrappedMC) : TimelineWrapperFactory.getInstance().getOneWrapperPerMC(builderDTO.wrappedMC);
+			_timelineWrapper = TimelineWrapperQueueSetDefaultFactory.getInstance().getOneWrapperPerMC(builderDTO.wrappedMC) as ITimelineWrapperQueueSetDefault;
 		}
 
-		private function createTimelineWrapper(queueEnabled:Boolean):void
+		private function createTimelineWrapper():void
 		{
-			_timelineWrapper = (queueEnabled) ? new TimelineWrapperQueue(new TimelineWrapper()) : new TimelineWrapper();
+			_timelineWrapper = new TimelineWrapperQueueSetDefault(new TimelineWrapperQueue(new TimelineWrapper()));
 			_timelineWrapper.wrappedMC = builderDTO.wrappedMC;
 		}
 	}

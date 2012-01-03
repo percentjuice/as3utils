@@ -1,9 +1,9 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
+	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueueSetDefault;
 
 	public interface ITimelineWrapperCompleteBuilder 
 	{
-		function build():ITimelineWrapper;
+		function build():ITimelineWrapperQueueSetDefault;
 	}
 }

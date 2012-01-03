@@ -31,18 +31,19 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		private var test_results:Array = [];
 		private var builtWrapperDestroy:ITimelineWrapper;
+		
+		[AfterClass]
+		public static function runAfterClass():void
+		{
+			TimelineWrapperFactory.getInstance().destroy();
+		}
 
 		[Before]
 		public function setup():void
 		{
+			TimelineWrapperFactory.getInstance().destroy();
 			test_results.length = 0;
 			builtWrapperDestroy = null;
-		}
-		
-		[After]
-		public function tearDown():void
-		{
-			TimelineWrapperFactory.getInstance().destroy();
 		}
 
 		[Test(async)]
@@ -51,8 +52,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			var builtWrapper:ITimelineWrapper = TimelineWrapperBuilder
 				.initialize()
 				.setWrappedMC(mcWithoutLabels)
-				.setOnCompleteHandler(handleOnCompleteWithParams)
-				.addOnCompleteHandlerParams(false, TEST_PARAMS)
+				.setOnCompleteHandler(handleOnCompleteWithParams, false, TEST_PARAMS)
 				.build();
 
 			handleSignal(this, builtWrapper.onComplete, handleDispatchWithDelayedFunctionCall, 1000, testThatSetParamsEqualDispatchedParams);
@@ -125,12 +125,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.initialize()
 				.setWrappedMC(wrapped)
 				.setRewrappingPrevention()
-				.addQueuingAbility()
 				.playWhenQueueEmpty(wrapped.totalFrames)
-				.noAdditionalQueueOptions()
-				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
-				.addOnCompleteHandlerParams(false, [new Object])
-				.addAutoPlayFunction()
+				.setOnCompleteHandler(rewrapHandler.handleOnComplete, false, [new Object])
+				.addAutoPlayFunctionAndBuild()
 				.gotoAndStop(wrapped.totalFrames)
 				.build();
 		}
@@ -141,9 +138,8 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.initialize()
 				.setWrappedMC(wrapped)
 				.setRewrappingPrevention()
-				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
-				.addOnCompleteHandlerParams(false, [new Object])
-				.addAutoPlayFunction()
+				.setOnCompleteHandler(rewrapHandler.handleOnComplete, false, [new Object])
+				.addAutoPlayFunctionAndBuild()
 				.gotoAndStop(wrapped.totalFrames)
 				.build();
 		}

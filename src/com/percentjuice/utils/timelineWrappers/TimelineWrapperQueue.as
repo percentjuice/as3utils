@@ -16,12 +16,12 @@ package com.percentjuice.utils.timelineWrappers
 	public class TimelineWrapperQueue implements ITimelineWrapper, ITimelineWrapperQueue
 	{
 		use namespace pj_as3utils_namespace;
-	
+
 		pj_as3utils_namespace var queueCompleteInternal:Signal;
-		
+
 		private var _timelineWrapper:TimelineWrapper;
 		private var _queueComplete:UntypedSignal;
-		
+
 		private var queueList:Array;
 
 		public function TimelineWrapperQueue(timelineWrapper:TimelineWrapper)
@@ -36,12 +36,12 @@ package com.percentjuice.utils.timelineWrappers
 			_queueComplete = new UntypedSignal(this);
 			queueCompleteInternal = new Signal();
 
-			_timelineWrapper.onCompleteInternal.add(handleHitStopPointSignalDispatched);
-			_timelineWrapper.onDestroy.add(handleDestroyed);
-			_timelineWrapper.onDestroy.target = this;
+			_timelineWrapper.onCompleteInternal.add(handleOnCompleteInternalDispatched);
+			_timelineWrapper.onDestroy.setOnceOnDispatchHandler(handleDestroyed);
+			_timelineWrapper.onDestroy.setOnDispatchHandlerParams(false, [this]);
 		}
 
-		private function handleHitStopPointSignalDispatched(...args):void
+		private function handleOnCompleteInternalDispatched():void
 		{
 			if (queueList.length)
 			{
@@ -112,29 +112,26 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function destroy():void
 		{
-			handleDestroyed(this);
 			_timelineWrapper.destroy();
 		}
 
-		private function handleDestroyed(timelineWrapper:ITimelineWrapper):void
+		private function handleDestroyed(timelineWrapper:ITimelineWrapperQueue):void
 		{
-			_timelineWrapper.onCompleteInternal.remove(handleHitStopPointSignalDispatched);
-			_timelineWrapper.onDestroy.remove(handleDestroyed);
-
 			clearQueue();
 			_queueComplete.removeAll();
 			_queueComplete = null;
 			queueCompleteInternal.removeAll();
 			queueCompleteInternal = null;
+			_timelineWrapper = null;
 		}
 
 		public function undecorate():ITimelineWrapper
 		{
+			var undecorated:ITimelineWrapper = _timelineWrapper;
+
 			if (!isDestroyed())
 				handleDestroyed(this);
 
-			var undecorated:ITimelineWrapper = _timelineWrapper;
-			_timelineWrapper = null;
 			return undecorated;
 		}
 
@@ -202,7 +199,7 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			if (isDestroyed())
 				throw new IllegalOperationError("cannot perform function since instance was destroyed or undecorated.");
-				
+
 			return _timelineWrapper;
 		}
 	}

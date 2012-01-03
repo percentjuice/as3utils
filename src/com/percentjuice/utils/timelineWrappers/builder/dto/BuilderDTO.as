@@ -12,13 +12,14 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 		
 		public var destroyAfterComplete:Boolean;
 		
-		public var queueEnabled:Boolean;
 		public var playWhenQueueEmptyParams:Array;
 		
 		public var queueCompleteHandler:Function;
 		public var onceQueueCompleteHandler:Function;
 		public var queueCompleteHandlerParams:Array;
 		public var firstQueueCompleteParamIsTimelineWrapper:Boolean;
+		
+		public var defaultAnim:Object;
 		
 		public var preventRewrapping:Boolean;
 	}

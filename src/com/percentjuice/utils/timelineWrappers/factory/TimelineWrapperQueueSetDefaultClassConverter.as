@@ -7,9 +7,9 @@ package com.percentjuice.utils.timelineWrappers.factory
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueueSetDefault;
 
-	public class TimelineWrapperQueueClassConverter extends TimelineWrapperClassConverter
+	public class TimelineWrapperQueueSetDefaultClassConverter extends TimelineWrapperClassConverter
 	{
-		public function TimelineWrapperQueueClassConverter(collectionAccessor:CollectionAccessor)
+		public function TimelineWrapperQueueSetDefaultClassConverter(collectionAccessor:CollectionAccessor)
 		{
 			super(collectionAccessor);
 		}
@@ -19,14 +19,15 @@ package com.percentjuice.utils.timelineWrappers.factory
 			switch(true)
 			{
 				case timelineWrapper is TimelineWrapper:
-					timelineWrapper = new TimelineWrapperQueue((timelineWrapper as TimelineWrapper));
+					timelineWrapper = new TimelineWrapperQueueSetDefault(new TimelineWrapperQueue((timelineWrapper as TimelineWrapper)));
 					break;
 				case timelineWrapper is TimelineWrapperQueue:
 					(timelineWrapper as TimelineWrapperQueue).clearQueue();
+					timelineWrapper = new TimelineWrapperQueueSetDefault((timelineWrapper as TimelineWrapperQueue));
 					break;
 				case timelineWrapper is TimelineWrapperQueueSetDefault:
 					(timelineWrapper as TimelineWrapperQueueSetDefault).clearQueue();
-					timelineWrapper = (timelineWrapper as TimelineWrapperQueueSetDefault).undecorate();
+					(timelineWrapper as TimelineWrapperQueueSetDefault).removeDefaultAnim();
 					break;
 				default:
 					throw new ArgumentError(timelineWrapper + ERROR_NOT_SUPPORTED);

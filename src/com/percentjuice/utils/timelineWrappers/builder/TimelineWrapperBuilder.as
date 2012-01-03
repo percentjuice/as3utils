@@ -8,6 +8,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 		protected static var allowInstantiation:Boolean;
 
 		private static const SINGLETON_ERROR:String = "Instantiation failed: use TimelineWrapperBuilder.initialize() method to retrieve Builder instance.";
+
 		private static var instance:TimelineWrapperBuilder;
 
 		public function TimelineWrapperBuilder()
