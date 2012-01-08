@@ -92,10 +92,10 @@ package com.percentjuice.utils.timelineWrappers
 		 * Stops defaultAnim if it's running.
 		 * Plays label or frame number passed in.
 		 */
-		public function playWhenQueueEmpty(frame:Object):void
+		public function appendToGotoAndPlayUntilNextLabelQueue(frames:Array):void
 		{
 			stopDefaultAnim();
-			timelineWrapperQueue.playWhenQueueEmpty(frame);
+			timelineWrapperQueue.appendToGotoAndPlayUntilNextLabelQueue(frames);
 		}
 
 		public function clearQueue():void

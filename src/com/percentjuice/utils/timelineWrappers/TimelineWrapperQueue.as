@@ -63,15 +63,16 @@ package com.percentjuice.utils.timelineWrappers
 		 * Plays label or frame number passed in if not busy.
 		 * Queues label or frame number if busy.
 		 */
-		public function playWhenQueueEmpty(frame:Object):void
+		public function appendToGotoAndPlayUntilNextLabelQueue(frames:Array):void
 		{
 			if (!queueList.length && !isPlaying)
 			{
-				gotoAndPlayUntilNextLabel(frame);
+				gotoAndPlayUntilNextLabel(frames.shift());
 			}
-			else
+
+			if (frames.length > 0)
 			{
-				queueList[queueList.length] = frame;
+				queueList = queueList.concat(frames);
 			}
 		}
 

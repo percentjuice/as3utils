@@ -10,6 +10,7 @@ package
 	{ 
 		public var timelineWrapperFactoryTest:TimelineWrapperFactoryTest;
 		public var timelineWrapperQueueFactoryTest:TimelineWrapperQueueFactoryTest;
+		public var timelineWrapperQueueSetDefaultFactoryTest:TimelineWrapperQueueSetDefaultFactoryTest;
 		public var timelineWrapperBuilderTest:TimelineWrapperBuilderTest;
 	}
 }

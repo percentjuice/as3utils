@@ -7,7 +7,7 @@ package com.percentjuice.utils.timelineWrappers
 	{
 		/* required methods */
 		function clearQueue():void;
-		function playWhenQueueEmpty(frame:Object):void;
+		function appendToGotoAndPlayUntilNextLabelQueue(frames:Array):void;
 		function isQueueEmpty():Boolean;
 		function undecorate():ITimelineWrapper;
 		/* required props */

@@ -1,9 +1,10 @@
 package com.percentjuice.utils.timelineWrappers.support
 {
-	import flash.display.MovieClip;
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
+	import flash.display.FrameLabel;
+	import flash.display.MovieClip;
 
 	public class MovieClipsLoaded
 	{
@@ -14,7 +15,9 @@ package com.percentjuice.utils.timelineWrappers.support
 		protected static var mcWith1Frame:MovieClip;
 
 		private static var mcLoader:EmbeddedMovieClipLoader;
-		
+
+		protected var mcWithLabelsCollection:Vector.<FrameLabel>;
+
 		[Before(async, order=1)]
 		public function loadAssets():void
 		{
@@ -48,6 +51,18 @@ package com.percentjuice.utils.timelineWrappers.support
 
 			loadComplete = true;
 			mcLoader = null;
+		}
+
+		[Before(order=2)]
+		public function setLabels():void
+		{
+			if (mcWithLabelsCollection == null)
+			{
+				var l:int = mcWithLabels.currentLabels.length;
+				mcWithLabelsCollection = new Vector.<FrameLabel>(l, true);
+				for (var i:int = 0; i < l; i++)
+					mcWithLabelsCollection[i] = FrameLabel(mcWithLabels.currentLabels[i]);
+			}
 		}
 	}
 }

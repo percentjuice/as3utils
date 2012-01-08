@@ -8,8 +8,6 @@ package com.percentjuice.utils.timelineWrappers
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
-	import flash.display.FrameLabel;
-
 	public class TimelineWrapperQueueTest extends MovieClipsLoaded
 	{		
 		private var timelineWrapper:TimelineWrapper;
@@ -26,11 +24,11 @@ package com.percentjuice.utils.timelineWrappers
 		[Test(async)]
 		public function should_show_final_frame_is_queued_request():void
 		{
-			handleSignal(this, timelineWrapperQueue.onComplete, handleLabelReached, 4000, [timelineWrapperQueue.onComplete, FrameLabel(mcWithLabels.currentLabels[1]).name]);
-			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 4000, [timelineWrapperQueue.queueComplete, FrameLabel(mcWithLabels.currentLabels[3]).name]);
+			handleSignal(this, timelineWrapperQueue.onComplete, handleLabelReached, 4000, [timelineWrapperQueue.onComplete, mcWithLabelsCollection[1].name]);
+			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 4000, [timelineWrapperQueue.queueComplete, mcWithLabelsCollection[3].name]);
 
-			timelineWrapperQueue.gotoAndPlayUntilNextLabel(FrameLabel(mcWithLabels.currentLabels[1]).name);
-			timelineWrapperQueue.playWhenQueueEmpty(FrameLabel(mcWithLabels.currentLabels[3]).name);
+			timelineWrapperQueue.gotoAndPlayUntilNextLabel(mcWithLabelsCollection[1].name);
+			timelineWrapperQueue.appendToGotoAndPlayUntilNextLabelQueue([mcWithLabelsCollection[3].name]);
 		}
 
 		private function handleLabelReached(event:SignalAsyncEvent, passThroughData:*):void

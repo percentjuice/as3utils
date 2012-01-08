@@ -17,12 +17,12 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			builderDTO.onCompleteHandlerParams = null;
 			builderDTO.firstCompleteParamIsTimelineWrapper = false;
 			builderDTO.destroyAfterComplete = false;
-			builderDTO.playWhenQueueEmptyParams = null;
+			builderDTO.playQueue = null;
 			builderDTO.queueCompleteHandler = null;
 			builderDTO.onceQueueCompleteHandler = null;
 			builderDTO.queueCompleteHandlerParams = null;
 			builderDTO.firstQueueCompleteParamIsTimelineWrapper = false;
-			builderDTO.defaultAnim = null;
+			builderDTO.playLoopedWhenQueueEmpty = null;
 			builderDTO.preventRewrapping = false;
 		}
 	}

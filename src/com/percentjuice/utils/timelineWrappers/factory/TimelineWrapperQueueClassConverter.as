@@ -1,8 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.factory
 {
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapper;
-	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueue;
-	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueueSetDefault;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapper;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueue;
 	import com.percentjuice.utils.timelineWrappers.TimelineWrapperQueueSetDefault;

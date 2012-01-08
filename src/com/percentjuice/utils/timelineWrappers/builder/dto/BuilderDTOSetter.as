@@ -18,13 +18,15 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 
 			applyParam(builderDTO.onCompleteHandler, onHandlerSetter(to.onComplete));
 			applyParam(builderDTO.onceOnCompleteHandler, onHandlerSetter(to.onComplete));
-			applyParam(builderDTO.defaultAnim, to.setDefaultAnim);
 			applyParam(builderDTO.queueCompleteHandler, onHandlerSetter(to.queueComplete));
 			applyParam(builderDTO.onceQueueCompleteHandler, onHandlerSetter(to.queueComplete));
-			applyParam(builderDTO.playWhenQueueEmptyParams, to.playWhenQueueEmpty);
 
 			applyParams(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(to.onComplete));
 			applyParams(builderDTO.firstQueueCompleteParamIsTimelineWrapper, builderDTO.queueCompleteHandlerParams, onParamsSetter(to.queueComplete));
+
+			/* order of play setters is important.  Queue complete is true where no play method is set.  Queue Empty is true where there is no queue. */ 
+			applyParam(builderDTO.playQueue, to.appendToGotoAndPlayUntilNextLabelQueue);
+			applyParam(builderDTO.playLoopedWhenQueueEmpty, to.setDefaultAnim);
 		}
 
 		private function applyParam(applyParam:*, to:Function):void

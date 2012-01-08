@@ -5,7 +5,6 @@ package com.percentjuice.utils.timelineWrappers
 	import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
 
-	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
 
 	public class FrameLabelCalculatorTest extends MovieClipsLoaded
@@ -44,11 +43,11 @@ package com.percentjuice.utils.timelineWrappers
 		[Test]
 		public function movieClips_with_labels_should_return_next_label_minus_one_frame():void
 		{
-			should_return_next_label_minus_one_frame(FrameLabel(mcWithLabels.currentLabels[0]).name, FrameLabel(mcWithLabels.currentLabels[1]).frame - 1);
-			should_return_next_label_minus_one_frame(FrameLabel(mcWithLabels.currentLabels[1]).name, FrameLabel(mcWithLabels.currentLabels[2]).frame - 1);
-			should_return_next_label_minus_one_frame(FrameLabel(mcWithLabels.currentLabels[2]).name, FrameLabel(mcWithLabels.currentLabels[3]).frame - 1);
+			should_return_next_label_minus_one_frame(mcWithLabelsCollection[0].name, mcWithLabelsCollection[1].frame - 1);
+			should_return_next_label_minus_one_frame(mcWithLabelsCollection[1].name, mcWithLabelsCollection[2].frame - 1);
+			should_return_next_label_minus_one_frame(mcWithLabelsCollection[2].name, mcWithLabelsCollection[3].frame - 1);
 
-			should_return_next_label_minus_one_frame(1, FrameLabel(mcWithLabels.currentLabels[0]).frame - 1);
+			should_return_next_label_minus_one_frame(1, mcWithLabelsCollection[0].frame - 1);
 		}
 
 		private function should_return_next_label_minus_one_frame(startData:Object, expectedResult:int):void
