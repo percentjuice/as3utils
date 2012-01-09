@@ -100,18 +100,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 			assertThat(instanceTestWrapper.isPlaying, isTrue());
 			assertThat(instanceTestWrapper.currentLabel, equalTo(playing));
 		}
-		
-		[Test]
-		public function f():void
-		{
-			TimelineWrapperBuilder
-			.initialize().setWrappedMC(mcWithoutLabels)
-			.setOnceOnCompleteHandler(new Function())
-			.addAutoPlayFunctionAndBuild()
-			.addPlayLoopedWhenQueueEmpty(5)
-			.addGotoAndPlayUntilNextLabelQueue([4,5,5])
-			.build();
-		}
 
 		[Test(async)]
 		public function should_destroy_after_complete():void
