@@ -17,7 +17,7 @@ package com.percentjuice.utils.timelineWrappers
 		use namespace pj_as3utils_namespace;
 
 		pj_as3utils_namespace static var nullMovieClip:MovieClip;
-		
+
 		private static var assertions:Assertions;
 		private static var frameLabelCalculator:FrameLabelCalculator;
 
@@ -29,7 +29,7 @@ package com.percentjuice.utils.timelineWrappers
 		private var _onComplete:UntypedSignal;
 		private var _destroyAfterComplete:Boolean;
 
-		private var stopOnFrame:int;
+		private var stopOnFrame:int = -1;
 
 		public function TimelineWrapper()
 		{
@@ -124,7 +124,7 @@ package com.percentjuice.utils.timelineWrappers
 			}
 
 			_isPlaying = false;
-			stopOnFrame = 0;
+			stopOnFrame = -1;
 		}
 
 		private function handleOnEnterFrame(e:Event):void
@@ -143,8 +143,8 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			clearCurrentAction();
 
-			_onComplete.dispatchSetParams();
 			onCompleteInternal.dispatch();
+			_onComplete.dispatchSetParams();
 
 			if (_destroyAfterComplete)
 				destroy();
