@@ -102,8 +102,6 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function gotoAndStop(frame:Object, scene:String = null):void
 		{
-			assertions.assertWrappedIsNotNull(this);
-
 			stop();
 			_wrappedMC.gotoAndStop(frame, scene);
 		}
@@ -154,7 +152,7 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			if (isDestroyed())
 			{
-				trace("TimelineWrapper::destroy() called on already destroyed object.");
+				trace("TimelineWrapper::destroy() called on already destroyed or else uninstantiated instance.");
 			}
 			else
 			{

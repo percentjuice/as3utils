@@ -7,9 +7,7 @@ package com.percentjuice.utils.timelineWrappers
 
 	public class Assertions
 	{
-		use namespace pj_as3utils_namespace;
-
-		public static const ATTEMPTED_OPERATION_ON_DESTROYED_INSTANCE:String = "Cannot call method on destroyed TimelineWrapper.";
+		public static const ATTEMPTED_OPERATION_ON_NULL_INSTANCE:String = "Cannot call method on TimelineWrapper with null MovieClip.";
 		public static const ATTEMPTED_INITIALIZATION_WITH_NULL_MOVIECLIP:String = "Attempted initialization with a null MovieClip.";
 		public static const ATTEMPTED_GOTO_WITH_NUMBER_AS_STRING:String = "] this String Request will be run by flash.display.MovieClip::gotoAndStop as a Number.  instead pass in a Number or rename your frame label.";
 		public static const ATTEMPTED_USING_FRAME_NOT_IN_TIMELINE:String = "Frame not located in the Timeline: ";
@@ -24,14 +22,14 @@ package com.percentjuice.utils.timelineWrappers
 
 		pj_as3utils_namespace function isInstanceDestroyed(instance:TimelineWrapper):Boolean
 		{
-			return instance.wrappedMC == TimelineWrapper.nullMovieClip;
+			return instance.wrappedMC == null;
 		}
 
 		pj_as3utils_namespace function assertWrappedIsNotNull(instance:TimelineWrapper):void
 		{
 			if (instance.wrappedMC == null)
 			{
-				throw new IllegalOperationError(ATTEMPTED_OPERATION_ON_DESTROYED_INSTANCE);
+				throw new IllegalOperationError(ATTEMPTED_OPERATION_ON_NULL_INSTANCE);
 			}
 		}
 

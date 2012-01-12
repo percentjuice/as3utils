@@ -157,7 +157,7 @@ package com.percentjuice.utils.timelineWrappers
 
 		public static function should_throw_error_if_used_after_destroy(timelineWrapper:ITimelineWrapper):void
 		{
-			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", Assertions.ATTEMPTED_OPERATION_ON_DESTROYED_INSTANCE))));
+			assertThat(timelineWrapper.gotoAndPlayUntilStop(1, 2), throws(allOf(instanceOf(IllegalOperationError), hasPropertyWithValue("message", Assertions.ATTEMPTED_OPERATION_ON_NULL_INSTANCE))));
 		}
 
 		[Test]
