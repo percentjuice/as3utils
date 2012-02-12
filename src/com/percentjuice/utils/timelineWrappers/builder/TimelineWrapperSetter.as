@@ -1,7 +1,25 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	public class TimelineWrapperSetter extends TimelineWrapperTriggerer implements ITimelineWrapperSetter
+	public class TimelineWrapperSetter extends TimelineWrapperFinish implements ITimelineWrapperSetter
 	{
+		public function addDestroyAfterComplete():ITimelineWrapperSetter
+		{
+			builderDTO.destroyAfterComplete = true;
+			return this;
+		}
+
+		public function addRewrappingPrevention():ITimelineWrapperSetter
+		{
+			builderDTO.preventRewrapping = true;
+			return this;
+		}
+
+		public function setAFallbackLoopedAnimation(frame:Object):ITimelineWrapperSetter
+		{
+			builderDTO.playLoopedWhenQueueEmpty = frame;
+			return this;
+		}
+		
 		public function setOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter
 		{
 			builderDTO.onCompleteHandler = handler;
@@ -15,18 +33,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 			builderDTO.onceOnCompleteHandler = handler;
 			builderDTO.firstCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
 			builderDTO.onCompleteHandlerParams = concatParams;
-			return this;
-		}
-
-		public function setDestroyAfterComplete():ITimelineWrapperSetter
-		{
-			builderDTO.destroyAfterComplete = true;
-			return this;
-		}
-
-		public function setRewrappingPrevention():ITimelineWrapperSetter
-		{
-			builderDTO.preventRewrapping = true;
 			return this;
 		}
 
@@ -46,9 +52,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return this;
 		}
 
-		public function addAutoPlayFunctionAndBuild():ITimelineWrapperTriggerer
+		public function buildWithAutoPlayFunction():ITimelineWrapperPlay
 		{
-			return this;
+			return new TimelineWrapperPlay(this);
 		}
 	}
 }

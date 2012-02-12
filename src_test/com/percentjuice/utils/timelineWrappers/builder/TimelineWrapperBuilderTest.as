@@ -56,7 +56,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.setWrappedMC(mcWithoutLabels)
 				.setOnCompleteHandler(handleOnCompleteWithParams, false, TEST_PARAMS)
 				.build();
-
+				
 			handleSignal(this, builtWrapper.onComplete, handleDispatchWithDelayedFunctionCall, 3000, testThatSetParamsEqualDispatchedParams);
 			builtWrapper.gotoAndPlayUntilStop(1, 2);
 		}
@@ -79,18 +79,16 @@ package com.percentjuice.utils.timelineWrappers.builder
 		}
 
 		[Test(async)]
-		public function should_play_should_runQueue_should_RunDefault():void
+		public function should_runQueue_should_RunDefault():void
 		{
 			playing = mcWithLabelsCollection[0].name;
 
 			instanceTestWrapper = TimelineWrapperBuilder
 				.initialize()
 				.setWrappedMC(mcWithLabels)
-				.addAutoPlayFunctionAndBuild()
-				.gotoAndPlayUntilNextLabel(mcWithLabelsCollection[2].name)
-				.addGotoAndPlayUntilNextLabelQueue([mcWithLabelsCollection[1].name])
-				.addPlayLoopedWhenQueueEmpty(playing)
-				.build();
+				.setAFallbackLoopedAnimation(playing)
+				.buildWithAutoPlayFunction()
+				.gotoAndPlayUntilNextLabelQueue([mcWithLabelsCollection[2].name, mcWithLabelsCollection[1].name]);
 
 			handleSignal(this, instanceTestWrapper.queueComplete, handleDispatchWithDelayedFunctionCall, 3000, testThatDefaultIsPlaying);
 		}
@@ -107,7 +105,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			instanceTestWrapper = TimelineWrapperBuilder
 				.initialize()
 				.setWrappedMC(mcWithoutLabels)
-				.setDestroyAfterComplete()
+				.addDestroyAfterComplete()
 				.build();
 
 			handleSignal(this, instanceTestWrapper.onComplete, handleDispatchWithDelayedFunctionCall, 1000, testThatDispatcherIsDestroyed);
@@ -159,11 +157,10 @@ package com.percentjuice.utils.timelineWrappers.builder
 			TimelineWrapperBuilder
 				.initialize()
 				.setWrappedMC(wrapped)
-				.setRewrappingPrevention()
+				.addRewrappingPrevention()
 				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
-				.addAutoPlayFunctionAndBuild()
-				.gotoAndPlay(wrapped.totalFrames * .5)
-				.build();
+				.buildWithAutoPlayFunction()
+				.gotoAndPlay(wrapped.totalFrames * .5);
 		}
 
 		private function runNewTimelineWrapperQueue(wrapped:MovieClip):void
@@ -171,12 +168,10 @@ package com.percentjuice.utils.timelineWrappers.builder
 			TimelineWrapperBuilder
 				.initialize()
 				.setWrappedMC(wrapped)
-				.setRewrappingPrevention()
+				.addRewrappingPrevention()
 				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
-				.addAutoPlayFunctionAndBuild()
-				.addGotoAndPlayUntilNextLabelQueue([wrapped.totalFrames])
-				.gotoAndPlay(1)
-				.build();
+				.buildWithAutoPlayFunction()
+				.gotoAndPlayUntilNextLabelQueue([wrapped.totalFrames, 1]);
 		}
 
 		private function handleTimerComplete(...args):void

@@ -1,7 +1,13 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	public interface ITimelineWrapperSetter extends ITimelineWrapperCompleteBuilder
+	public interface ITimelineWrapperSetter extends ITimelineWrapperFinish
 	{
+		function addDestroyAfterComplete():ITimelineWrapperSetter;
+		
+		function addRewrappingPrevention():ITimelineWrapperSetter;
+		
+		function setAFallbackLoopedAnimation(frame:Object):ITimelineWrapperSetter;
+
 		function setOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter;
 
 		function setOnceOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter;
@@ -10,10 +16,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		function setOnceQueueCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter;
 
-		function setDestroyAfterComplete():ITimelineWrapperSetter;
-		
-		function setRewrappingPrevention():ITimelineWrapperSetter;
-		
-		function addAutoPlayFunctionAndBuild():ITimelineWrapperTriggerer;
+		function buildWithAutoPlayFunction():ITimelineWrapperPlay;
 	}
 }
