@@ -25,22 +25,22 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		private static function getInstance():TimelineWrapperBuilder
 		{
-			if (!instance)
+			if (instance == null)
 			{
 				allowInstantiation = true;
 				instance = new TimelineWrapperBuilder();
 				allowInstantiation = false;
 			}
+			else
+			{
+				instance._timelineWrapper = nullTimelineWrapper;
+			}
+
 			return instance;
 		}
 
 		public static function initialize():ITimelineWrapperRequiredParamSetter
 		{
-			if (instance != null)
-			{
-				instance._timelineWrapper = nullTimelineWrapper;
-			}
-
 			return getInstance();
 		}
 

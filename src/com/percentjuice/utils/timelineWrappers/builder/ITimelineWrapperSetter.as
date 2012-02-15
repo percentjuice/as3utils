@@ -16,6 +16,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		function setOnceQueueCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter;
 
-		function buildWithAutoPlayFunction():ITimelineWrapperPlay;
+		function buildWithAutoPlayFunction():ITimelineWrapperPlayFinish;
 	}
 }

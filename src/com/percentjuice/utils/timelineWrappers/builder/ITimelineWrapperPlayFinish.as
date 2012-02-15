@@ -2,7 +2,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 {
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueueSetDefault;
 	
-	public interface ITimelineWrapperPlay
+	public interface ITimelineWrapperPlayFinish
 	{
 		function gotoAndPlay(frame:Object, scene:String = null):ITimelineWrapperQueueSetDefault;
 

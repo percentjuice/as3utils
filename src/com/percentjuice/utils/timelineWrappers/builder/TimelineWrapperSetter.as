@@ -1,6 +1,6 @@
 package com.percentjuice.utils.timelineWrappers.builder
 {
-	public class TimelineWrapperSetter extends TimelineWrapperFinish implements ITimelineWrapperSetter
+	public class TimelineWrapperSetter extends TimelineWrapperPlayFinish implements ITimelineWrapperSetter
 	{
 		public function addDestroyAfterComplete():ITimelineWrapperSetter
 		{
@@ -52,9 +52,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return this;
 		}
 
-		public function buildWithAutoPlayFunction():ITimelineWrapperPlay
+		public function buildWithAutoPlayFunction():ITimelineWrapperPlayFinish
 		{
-			return new TimelineWrapperPlay(this);
+			return this;
 		}
 	}
 }
