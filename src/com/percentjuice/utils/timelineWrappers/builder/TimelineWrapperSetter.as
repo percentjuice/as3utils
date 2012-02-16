@@ -20,35 +20,35 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return this;
 		}
 		
-		public function setOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter
+		public function setOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, ...params):ITimelineWrapperSetter
 		{
 			builderDTO.onCompleteHandler = handler;
 			builderDTO.firstCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
-			builderDTO.onCompleteHandlerParams = concatParams;
+			builderDTO.onCompleteHandlerParams = params;
 			return this;
 		}
 
-		public function setOnceOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter
+		public function setOnceOnCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, ...params):ITimelineWrapperSetter
 		{
 			builderDTO.onceOnCompleteHandler = handler;
 			builderDTO.firstCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
-			builderDTO.onCompleteHandlerParams = concatParams;
+			builderDTO.onCompleteHandlerParams = params;
 			return this;
 		}
 
-		public function setQueueCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter
+		public function setQueueCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, ...params):ITimelineWrapperSetter
 		{
 			builderDTO.queueCompleteHandler = handler;
 			builderDTO.firstQueueCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
-			builderDTO.queueCompleteHandlerParams = concatParams;
+			builderDTO.queueCompleteHandlerParams = params;
 			return this;
 		}
 
-		public function setOnceQueueCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, concatParams:Array = null):ITimelineWrapperSetter
+		public function setOnceQueueCompleteHandler(handler:Function, firstParamIsTimelineWrapper:Boolean = false, ...params):ITimelineWrapperSetter
 		{
 			builderDTO.onceQueueCompleteHandler = handler;
 			builderDTO.firstQueueCompleteParamIsTimelineWrapper = firstParamIsTimelineWrapper;
-			builderDTO.queueCompleteHandlerParams = concatParams;
+			builderDTO.queueCompleteHandlerParams = params;
 			return this;
 		}
 

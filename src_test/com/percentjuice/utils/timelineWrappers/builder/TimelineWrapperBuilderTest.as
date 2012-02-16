@@ -4,10 +4,10 @@ package com.percentjuice.utils.timelineWrappers.builder
 	import com.percentjuice.utils.timelineWrappers.ITimelineWrapperQueueSetDefault;
 	import com.percentjuice.utils.timelineWrappers.factory.TimelineWrapperFactory;
 	import com.percentjuice.utils.timelineWrappers.support.MovieClipsLoaded;
-
 	import org.flexunit.async.Async;
 	import org.flexunit.rules.IMethodRule;
 	import org.hamcrest.assertThat;
+	import org.hamcrest.collection.hasItems;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.isTrue;
 	import org.mockito.integrations.flexunit4.MockitoRule;
@@ -15,7 +15,6 @@ package com.percentjuice.utils.timelineWrappers.builder
 	import org.mockito.integrations.verify;
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
-
 	import flash.display.MovieClip;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -28,7 +27,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 		[Mock]
 		public var rewrapHandler:IMockHandler;
 
-		private static const TEST_PARAMS:Array = ["param0", 1, 2];
+		private static const TEST_PARAM_0:String = "param0";
+		private static const TEST_PARAM_1:int = 1;
+		private static const TEST_PARAM_2:int = 2;
 
 		private var test_results:Array = [];
 		private var instanceTestWrapper:ITimelineWrapperQueueSetDefault;
@@ -54,7 +55,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			var builtWrapper:ITimelineWrapper = TimelineWrapperBuilder
 				.initialize()
 				.setWrappedMC(mcWithoutLabels)
-				.setOnCompleteHandler(handleOnCompleteWithParams, false, TEST_PARAMS)
+				.setOnCompleteHandler(handleOnCompleteWithParams, false, TEST_PARAM_0, TEST_PARAM_1, TEST_PARAM_2)
 				.build();
 				
 			handleSignal(this, builtWrapper.onComplete, handleDispatchWithDelayedFunctionCall, 3000, testThatSetParamsEqualDispatchedParams);
@@ -70,7 +71,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		private function testThatSetParamsEqualDispatchedParams():void
 		{
-			assertThat(TEST_PARAMS, equalTo(test_results));
+			assertThat(test_results, hasItems(equalTo(TEST_PARAM_0), equalTo(TEST_PARAM_1), equalTo(TEST_PARAM_2)));
 		}
 
 		private function handleOnCompleteWithParams(param1:String, param2:int, param3:int):void
@@ -88,7 +89,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.setWrappedMC(mcWithLabels)
 				.setAFallbackLoopedAnimation(playing)
 				.buildWithAutoPlayFunction()
-				.gotoAndPlayUntilNextLabelQueue([mcWithLabelsCollection[2].name, mcWithLabelsCollection[1].name]);
+				.gotoAndPlayUntilNextLabelQueue(mcWithLabelsCollection[2].name, mcWithLabelsCollection[1].name);
 
 			handleSignal(this, instanceTestWrapper.queueComplete, handleDispatchWithDelayedFunctionCall, 3000, testThatDefaultIsPlaying);
 		}
@@ -121,7 +122,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 		[Test(async)]
 		public function rewrappingPrevention_should_prevent_rewrapping_from_throwing_an_error():void
 		{
-			var timer:Timer = new Timer(100, 1);
+			var timer:Timer = new Timer(100, 10);
 			timer.addEventListener(TimerEvent.TIMER, handleTimerEvent, false, 0, true);
 
 			Async.handleEvent(this, timer, TimerEvent.TIMER_COMPLETE, handleTimerComplete, 5000);
@@ -146,9 +147,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 		private function runParallelTestsWith(testParam0:MovieClip, testParam1:MovieClip):void
 		{
 			testParam0.gotoAndStop(1);
-			testParam1.gotoAndStop(1);
-
 			runNewTimelineWrapper(testParam0);
+
+			testParam1.gotoAndStop(1);
 			runNewTimelineWrapperQueue(testParam1);
 		}
 
@@ -171,7 +172,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.addRewrappingPrevention()
 				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
 				.buildWithAutoPlayFunction()
-				.gotoAndPlayUntilNextLabelQueue([wrapped.totalFrames, 1]);
+				.gotoAndPlayUntilNextLabelQueue(wrapped.totalFrames, 1);
 		}
 
 		private function handleTimerComplete(...args):void
@@ -181,8 +182,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		private function handleOnComplete():void
 		{
-			// only the last running ITimelineWrappers have enough time to complete the play method.
-			verify(times(3)).that(rewrapHandler.handleOnComplete());
+			verify(times(10)).that(rewrapHandler.handleOnComplete());
 		}
 	}
 }

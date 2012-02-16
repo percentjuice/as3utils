@@ -23,7 +23,7 @@ package com.percentjuice.utils.timelineWrappers
 		public function should_show_that_untyped_signal_dispatches_params():void
 		{
 			signal.setOnceOnDispatchHandler(handleSignalWithParamDispatched);
-			signal.setOnDispatchHandlerParams(false, [TEST_PARAM]);
+			signal.setOnDispatchHandlerParams(false, TEST_PARAM);
 			signal.dispatchSetParams();
 		}
 
@@ -36,7 +36,7 @@ package com.percentjuice.utils.timelineWrappers
 		public function should_force_signature_when_param_set():void
 		{
 			signal.setOnceOnDispatchHandler(handleSignalDispatch_emptySignature);
-			signal.setOnDispatchHandlerParams(false, [TEST_PARAM]);
+			signal.setOnDispatchHandlerParams(false, TEST_PARAM);
 			assertThat(signal.dispatchSetParams(), throws(allOf(instanceOf(ArgumentError))));
 		}
 
@@ -63,7 +63,7 @@ package com.percentjuice.utils.timelineWrappers
 
 			try
 			{
-				signal.setOnDispatchHandlerParams(false, [TEST_PARAM]);
+				signal.setOnDispatchHandlerParams(false, TEST_PARAM);
 				signal.dispatchSetParams();
 			}
 			catch (error:ArgumentError)
@@ -88,7 +88,7 @@ package com.percentjuice.utils.timelineWrappers
 		public function should_dispatch_timelineWrapper_as_first_param():void
 		{
 			signal.setOnceOnDispatchHandler(handleSignalWithParamsDispatched);
-			signal.setOnDispatchHandlerParams(true, [TEST_PARAM]);
+			signal.setOnDispatchHandlerParams(true, TEST_PARAM);
 			signal.dispatchSetParams();
 		}
 

@@ -35,19 +35,15 @@ package com.percentjuice.utils.timelineWrappers
 			super.addOnce(handler);
 		}
 
-		public function setOnDispatchHandlerParams(firstParamIsTarget:Boolean, concatParams:Array = null):void
+		public function setOnDispatchHandlerParams(firstParamIsTarget:Boolean, ...params):void
 		{
 			if (firstParamIsTarget)
 			{
-				onDispatchHandlerParams = (concatParams == null) ? [target] : [target].concat(concatParams);
+				onDispatchHandlerParams = (params.length == 0) ? [target] : [target].concat(params);
 			}
-			else if (concatParams == null)
+			else if (params.length > 0)
 			{
-				return;
-			}
-			else
-			{
-				onDispatchHandlerParams = concatParams;
+				onDispatchHandlerParams = params;
 			}
 		}
 

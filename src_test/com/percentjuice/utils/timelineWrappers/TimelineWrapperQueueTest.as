@@ -28,7 +28,7 @@ package com.percentjuice.utils.timelineWrappers
 			handleSignal(this, timelineWrapperQueue.queueComplete, handleLabelReached, 4000, [timelineWrapperQueue.queueComplete, mcWithLabelsCollection[3].name]);
 
 			timelineWrapperQueue.gotoAndPlayUntilNextLabel(mcWithLabelsCollection[1].name);
-			timelineWrapperQueue.appendToGotoAndPlayUntilNextLabelQueue([mcWithLabelsCollection[3].name]);
+			timelineWrapperQueue.appendToGotoAndPlayUntilNextLabelQueue(mcWithLabelsCollection[3].name);
 		}
 
 		private function handleLabelReached(event:SignalAsyncEvent, passThroughData:*):void

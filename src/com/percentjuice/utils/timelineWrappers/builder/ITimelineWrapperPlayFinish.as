@@ -10,7 +10,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):ITimelineWrapperQueueSetDefault;
 
-		function gotoAndPlayUntilNextLabelQueue(frames:Array):ITimelineWrapperQueueSetDefault;
+		function gotoAndPlayUntilNextLabelQueue(...frames):ITimelineWrapperQueueSetDefault;
 		
 		function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):ITimelineWrapperQueueSetDefault;
 

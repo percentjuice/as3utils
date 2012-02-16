@@ -23,7 +23,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 			return build();
 		}
 
-		public function gotoAndPlayUntilNextLabelQueue(frames:Array):ITimelineWrapperQueueSetDefault
+		public function gotoAndPlayUntilNextLabelQueue(...frames):ITimelineWrapperQueueSetDefault
 		{
 			builderDTO.playQueue = frames;
 			return build();

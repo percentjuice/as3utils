@@ -38,7 +38,7 @@ package com.percentjuice.utils.timelineWrappers
 
 			_timelineWrapper.onCompleteInternal.add(handleOnCompleteInternalDispatched);
 			_timelineWrapper.onDestroy.setOnceOnDispatchHandler(handleDestroyed);
-			_timelineWrapper.onDestroy.setOnDispatchHandlerParams(false, [this]);
+			_timelineWrapper.onDestroy.setOnDispatchHandlerParams(false, this);
 		}
 
 		private function handleOnCompleteInternalDispatched():void
@@ -63,16 +63,26 @@ package com.percentjuice.utils.timelineWrappers
 		 * Plays label or frame number passed in if not busy.
 		 * Queues label or frame number if busy.
 		 */
-		public function appendToGotoAndPlayUntilNextLabelQueue(frames:Array):void
+		public function appendToGotoAndPlayUntilNextLabelQueue(...frames):void
 		{
+			if (frames.length == 0)
+			{
+				return;
+			}
+			
+			var i:int = 0;
+
 			if (!queueList.length && !isPlaying)
 			{
-				gotoAndPlayUntilNextLabel(frames.shift());
+				gotoAndPlayUntilNextLabel(frames[0]);
+				++i;
 			}
 
-			if (frames.length > 0)
+			var l:int = frames.length;
+
+			for (; i < l; i++)
 			{
-				queueList = queueList.concat(frames);
+				queueList[queueList.length] = frames[i];
 			}
 		}
 
@@ -143,6 +153,8 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function set wrappedMC(wrappedMC:MovieClip):void
 		{
+			clearQueue();
+
 			timelineWrapper.wrappedMC = wrappedMC;
 		}
 

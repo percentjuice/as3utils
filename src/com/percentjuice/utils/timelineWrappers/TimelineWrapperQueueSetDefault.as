@@ -29,7 +29,7 @@ package com.percentjuice.utils.timelineWrappers
 		{
 			_timelineWrapperQueue.queueCompleteInternal.add(handleQueueCompleteInternalDispatched);
 			_timelineWrapperQueue.onDestroy.setOnceOnDispatchHandler(handleDestroyed);
-			_timelineWrapperQueue.onDestroy.setOnDispatchHandlerParams(false, [this]);
+			_timelineWrapperQueue.onDestroy.setOnDispatchHandlerParams(false, this);
 		}
 
 		private function handleDestroyed(timelineWrapper:ITimelineWrapperQueueSetDefault):void
@@ -92,10 +92,10 @@ package com.percentjuice.utils.timelineWrappers
 		 * Stops defaultAnim if it's running.
 		 * Plays label or frame number passed in.
 		 */
-		public function appendToGotoAndPlayUntilNextLabelQueue(frames:Array):void
+		public function appendToGotoAndPlayUntilNextLabelQueue(...frames):void
 		{
 			stopDefaultAnim();
-			timelineWrapperQueue.appendToGotoAndPlayUntilNextLabelQueue(frames);
+			timelineWrapperQueue.appendToGotoAndPlayUntilNextLabelQueue.apply(null, frames);
 		}
 
 		public function clearQueue():void
@@ -150,6 +150,8 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function set wrappedMC(wrappedMC:MovieClip):void
 		{
+			removeDefaultAnim();
+			
 			timelineWrapperQueue.wrappedMC = wrappedMC;
 		}
 
