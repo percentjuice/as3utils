@@ -54,6 +54,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		public function buildWithAutoPlayFunction():ITimelineWrapperPlayFinish
 		{
+			preBuild();
 			return this;
 		}
 	}

@@ -17,7 +17,6 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			builderDTO.onCompleteHandlerParams = null;
 			builderDTO.firstCompleteParamIsTimelineWrapper = false;
 			builderDTO.destroyAfterComplete = false;
-			builderDTO.playQueue = null;
 			builderDTO.queueCompleteHandler = null;
 			builderDTO.onceQueueCompleteHandler = null;
 			builderDTO.queueCompleteHandlerParams = null;

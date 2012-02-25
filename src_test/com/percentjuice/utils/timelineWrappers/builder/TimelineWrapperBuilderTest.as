@@ -7,6 +7,8 @@ package com.percentjuice.utils.timelineWrappers.builder
 	import org.flexunit.async.Async;
 	import org.flexunit.rules.IMethodRule;
 	import org.hamcrest.assertThat;
+	import org.hamcrest.collection.arrayWithSize;
+	import org.hamcrest.collection.everyItem;
 	import org.hamcrest.collection.hasItems;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.isTrue;
@@ -66,7 +68,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 		{
 			var testFunction:Function = passThroughData as Function;
 
-			Async.delayCall(this, testFunction, 500);
+			Async.delayCall(this, testFunction, 1);
 		}
 
 		private function testThatSetParamsEqualDispatchedParams():void
@@ -118,14 +120,40 @@ package com.percentjuice.utils.timelineWrappers.builder
 			assertThat(instanceTestWrapper.isDestroyed(), isTrue());
 		}
 
+		[Test(async)]
+		public function should_runQueue_and_dispatch_itself():void
+		{
+			playing = mcWithLabelsCollection[0].name;
+
+			instanceTestWrapper = TimelineWrapperBuilder
+				.initialize()
+				.setWrappedMC(mcWithLabels)
+				.setOnCompleteHandler(handleEachOnComplete, true)
+				.buildWithAutoPlayFunction()
+				.gotoAndPlayUntilNextLabelQueue(mcWithLabelsCollection[2].name, mcWithLabelsCollection[1].name);
+
+			handleSignal(this, instanceTestWrapper.queueComplete, handleDispatchWithDelayedFunctionCall, 3000, testThatQueuedParamsEqualDispatchedParams);
+		}
+
+		private function handleEachOnComplete(timelineWrapper:ITimelineWrapperQueueSetDefault):void
+		{
+			test_results.push(timelineWrapper);
+		}
+
+		private function testThatQueuedParamsEqualDispatchedParams():void
+		{
+			assertThat(instanceTestWrapper.currentLabel, equalTo(mcWithLabelsCollection[1].name));
+			assertThat(test_results, arrayWithSize(equalTo(2)), everyItem(equalTo(instanceTestWrapper)));
+		}
+
 		/* stress test. includes case for Builder misuse. */
 		[Test(async)]
 		public function rewrappingPrevention_should_prevent_rewrapping_from_throwing_an_error():void
 		{
-			var timer:Timer = new Timer(100, 10);
+			var timer:Timer = new Timer(1000, 3);
 			timer.addEventListener(TimerEvent.TIMER, handleTimerEvent, false, 0, true);
 
-			Async.handleEvent(this, timer, TimerEvent.TIMER_COMPLETE, handleTimerComplete, 5000);
+			Async.handleEvent(this, timer, TimerEvent.TIMER_COMPLETE, handleTimerComplete, 4000);
 			timer.start();
 		}
 
@@ -161,7 +189,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.addRewrappingPrevention()
 				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
 				.buildWithAutoPlayFunction()
-				.gotoAndPlay(wrapped.totalFrames * .5);
+				.gotoAndPlay(wrapped.totalFrames);
 		}
 
 		private function runNewTimelineWrapperQueue(wrapped:MovieClip):void
@@ -170,9 +198,9 @@ package com.percentjuice.utils.timelineWrappers.builder
 				.initialize()
 				.setWrappedMC(wrapped)
 				.addRewrappingPrevention()
-				.setOnCompleteHandler(rewrapHandler.handleOnComplete)
+				.setQueueCompleteHandler(rewrapHandler.handleOnComplete)
 				.buildWithAutoPlayFunction()
-				.gotoAndPlayUntilNextLabelQueue(wrapped.totalFrames, 1);
+				.gotoAndPlayUntilNextLabelQueue(wrapped.totalFrames, wrapped.totalFrames);
 		}
 
 		private function handleTimerComplete(...args):void
@@ -182,7 +210,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		private function handleOnComplete():void
 		{
-			verify(times(10)).that(rewrapHandler.handleOnComplete());
+			verify(times(12)).that(rewrapHandler.handleOnComplete());
 		}
 	}
 }

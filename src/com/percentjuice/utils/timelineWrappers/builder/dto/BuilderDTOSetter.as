@@ -12,21 +12,23 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			this.builderDTO = builderDTO;
 		}
 
-		public function setProps(to:ITimelineWrapperQueueSetDefault):void
+		public function setPreRunProps(target:ITimelineWrapperQueueSetDefault):void
 		{
-			to.destroyAfterComplete = builderDTO.destroyAfterComplete;
+			target.destroyAfterComplete = builderDTO.destroyAfterComplete;
 
-			applyParam(builderDTO.onCompleteHandler, onHandlerSetter(to.onComplete));
-			applyParam(builderDTO.onceOnCompleteHandler, onHandlerSetter(to.onComplete));
-			applyParam(builderDTO.queueCompleteHandler, onHandlerSetter(to.queueComplete));
-			applyParam(builderDTO.onceQueueCompleteHandler, onHandlerSetter(to.queueComplete));
+			applyParam(builderDTO.onCompleteHandler, onHandlerSetter(target.onComplete));
+			applyParam(builderDTO.onceOnCompleteHandler, onHandlerSetter(target.onComplete));
+			applyParam(builderDTO.queueCompleteHandler, onHandlerSetter(target.queueComplete));
+			applyParam(builderDTO.onceQueueCompleteHandler, onHandlerSetter(target.queueComplete));
 
-			applyArgs(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(to.onComplete));
-			applyArgs(builderDTO.firstQueueCompleteParamIsTimelineWrapper, builderDTO.queueCompleteHandlerParams, onParamsSetter(to.queueComplete));
+			applyArgs(builderDTO.firstCompleteParamIsTimelineWrapper, builderDTO.onCompleteHandlerParams, onParamsSetter(target.onComplete), target);
+			applyArgs(builderDTO.firstQueueCompleteParamIsTimelineWrapper, builderDTO.queueCompleteHandlerParams, onParamsSetter(target.queueComplete), target);
+		}
 
-			/* order of play setters is important.  Queue complete is true where no play method is set.  Queue Empty is true where there is no queue. */
+		/* order of play setters is important.  Queue complete is true where no play method is set.  Queue Empty is true where there is no queue. */
+		public function setPostRunProps(to:ITimelineWrapperQueueSetDefault):void
+		{
 			applyParam(builderDTO.playLoopedWhenQueueEmpty, to.setDefaultAnim);
-			to.appendToGotoAndPlayUntilNextLabelQueue.apply(null, builderDTO.playQueue);
 		}
 
 		private function applyParam(applyParam:*, to:Function):void
@@ -37,22 +39,26 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 			to(applyParam);
 		}
 
-		private function applyArgs(applyParam1:Boolean, addArgs:Object, to:Function):void
+		private function applyArgs(applyParam:Boolean, addArgs:Object, targetFunction:Function, target:ITimelineWrapperQueueSetDefault):void
 		{
-			if (addArgs == null)
-				to(applyParam1);
+			if (applyParam == false && addArgs == null)
+				return;
+			else if (addArgs == null)
+				targetFunction(applyParam);
+			else if (applyParam == false)
+				targetFunction.apply(null, [false].concat(addArgs));
 			else
-				to.apply(null, [applyParam1].concat(addArgs));
+				targetFunction.apply(null, [false].concat(target, addArgs));
 		}
 
-		private function onHandlerSetter(to:UntypedSignal):Function
+		private function onHandlerSetter(signal:UntypedSignal):Function
 		{
-			return to.setOnDispatchHandler;
+			return signal.setOnDispatchHandler;
 		}
 
-		private function onParamsSetter(to:UntypedSignal):Function
+		private function onParamsSetter(signal:UntypedSignal):Function
 		{
-			return to.setOnDispatchHandlerParams;
+			return signal.setOnDispatchHandlerParams;
 		}
 	}
 }

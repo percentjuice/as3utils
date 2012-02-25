@@ -8,37 +8,44 @@ package com.percentjuice.utils.timelineWrappers.builder
 		public function gotoAndPlay(frame:Object, scene:String = null):ITimelineWrapperQueueSetDefault
 		{
 			timelineWrapper.gotoAndPlay(frame, scene);
-			return build();
+			return returnBuild();
+		}
+
+		private function returnBuild():ITimelineWrapperQueueSetDefault
+		{
+			postBuild();
+
+			return timelineWrapper;
 		}
 
 		public function gotoAndStop(frame:Object, scene:String = null):ITimelineWrapperQueueSetDefault
 		{
 			timelineWrapper.gotoAndStop(frame, scene);
-			return build();
+			return returnBuild();
 		}
 
 		public function gotoAndPlayUntilNextLabel(frame:Object, scene:String = null):ITimelineWrapperQueueSetDefault
 		{
 			timelineWrapper.gotoAndPlayUntilNextLabel(frame, scene);
-			return build();
+			return returnBuild();
 		}
 
 		public function gotoAndPlayUntilNextLabelQueue(...frames):ITimelineWrapperQueueSetDefault
 		{
-			builderDTO.playQueue = frames;
-			return build();
+			timelineWrapper.appendToGotoAndPlayUntilNextLabelQueue.apply(null, frames);
+			return returnBuild();
 		}
 
 		public function gotoAndPlayUntilStop(frame:Object, stopOn:Object, scene:String = null):ITimelineWrapperQueueSetDefault
 		{
 			timelineWrapper.gotoAndPlayUntilStop(frame, stopOn, scene);
-			return build();
+			return returnBuild();
 		}
 
 		public function play():ITimelineWrapperQueueSetDefault
 		{
 			timelineWrapper.play();
-			return build();
+			return returnBuild();
 		}
 	}
 }

@@ -135,7 +135,7 @@ package com.percentjuice.utils.timelineWrappers
 
 		public function destroy():void
 		{
-			timelineWrapperQueue.destroy();
+			_timelineWrapperQueue.destroy();
 		}
 
 		public function undecorate():ITimelineWrapper

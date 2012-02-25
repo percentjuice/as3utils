@@ -9,7 +9,6 @@ package com.percentjuice.utils.timelineWrappers.builder.dto
 		public var onCompleteHandlerParams:Object;
 		public var firstCompleteParamIsTimelineWrapper:Boolean;
 		public var destroyAfterComplete:Boolean;
-		public var playQueue:Object;
 		public var queueCompleteHandler:Function;
 		public var onceQueueCompleteHandler:Function;
 		public var queueCompleteHandlerParams:Object;

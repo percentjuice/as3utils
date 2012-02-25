@@ -8,7 +8,7 @@ package com.percentjuice.utils.timelineWrappers.builder
 	{
 		internal static var builderDTO:BuilderDTO;
 		internal static var nullTimelineWrapper:ITimelineWrapperQueueSetDefault;
-		
+
 		private static var builderDTOResetter:BuilderDTOResetter;
 		private static var builderDTOSetter:BuilderDTOSetter;
 
@@ -23,10 +23,21 @@ package com.percentjuice.utils.timelineWrappers.builder
 
 		public function build():ITimelineWrapperQueueSetDefault
 		{
-			builderDTOSetter.setProps(timelineWrapper);
-			builderDTOResetter.reset();
+			preBuild();
+			postBuild();
 
 			return _timelineWrapper;
+		}
+
+		protected function preBuild():void
+		{
+			builderDTOSetter.setPreRunProps(timelineWrapper);
+		}
+
+		protected function postBuild():void
+		{
+			builderDTOSetter.setPostRunProps(timelineWrapper);
+			builderDTOResetter.reset();
 		}
 
 		internal function get timelineWrapper():ITimelineWrapperQueueSetDefault

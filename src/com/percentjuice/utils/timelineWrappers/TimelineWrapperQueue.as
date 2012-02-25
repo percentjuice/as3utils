@@ -49,7 +49,7 @@ package com.percentjuice.utils.timelineWrappers
 			}
 			else
 			{
-				queueComplete.dispatch();
+				queueComplete.dispatchSetParams();
 				queueCompleteInternal.dispatch();
 			}
 		}
